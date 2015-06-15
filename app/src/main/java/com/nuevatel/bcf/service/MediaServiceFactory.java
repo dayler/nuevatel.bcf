@@ -1,23 +1,48 @@
 package com.nuevatel.bcf.service;
 
 /**
- * Created by asalazar on 6/14/15.
+ * Creates initialize and stop teh MediaService.
+ *
+ * @author Ariel Salazar
  */
 public final class MediaServiceFactory {
 
+    /**
+     * Media service instance.
+     */
     private static MediaService service;
 
-
-
-    private MediaServiceFactory() {
-        // No op. Used to prevent instantiation.
+    /**
+     *
+     * @param threadPoolSize Count of threads for the service.
+     * @return MediaService instance
+     */
+    public synchronized MediaService start(Integer threadPoolSize) {
+        if (threadPoolSize == null) {
+            service = new MediaServiceImpl();
+        } else {
+            service = new MediaServiceImpl(threadPoolSize);
+        }
+        service.start();
+        return service;
     }
 
-    public synchronized static MediaService get() {
+    /**
+     * Stop the service.
+     */
+    public synchronized void shutdown() {
         if (service == null) {
-            service = new MediaServiceImpl();
+            return;
         }
+        service.shutdown();
+        service = null;
+    }
 
+    /**
+     *
+     * @return If the service was started returns an instance of MediaService, in other case returns <b>null</b>.
+     */
+    public synchronized MediaService get() {
         return service;
     }
 }

@@ -11,6 +11,7 @@ import com.nuevatel.bcf.domain.Unit;
 import com.nuevatel.bcf.service.RegexServiceFactory;
 import com.nuevatel.bcf.service.UnitServiceFactory;
 import com.nuevatel.cf.appconn.Action;
+import com.nuevatel.cf.appconn.Id;
 import com.nuevatel.cf.appconn.MediaArg;
 import com.nuevatel.cf.appconn.Name;
 import com.nuevatel.cf.appconn.NewSessionCall;
@@ -25,7 +26,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by asalazar on 6/11/15.
+ * Handle <b>NewSessionCall</b> message. If the unit to request session in on blacklist, it will send a media
+ * (new or end media) and finish it.
+ *
+ * @author Ariel Salazar
  */
 public class NewSessionTask implements Task {
 
@@ -40,24 +44,24 @@ public class NewSessionTask implements Task {
      */
     @Override
     public Message execute(Conn conn, Message message) throws Exception {
+        NewSessionCall newSessionCall = new NewSessionCall(message);
         try {
             // NewSessionCall
-            NewSessionCall newSessionCall = new NewSessionCall(message);
             if (checkNewSessionCall(newSessionCall)) {
                 // Get type
                 Type tmpType = newSessionCall.getType();
                 Name tmpName =  newSessionCall.getName();
                 // Name
                 Name name = NameGetterProvider.get().getSessionName(tmpType, tmpName);
-                SessionArg sessionArg = newSessionCall.getSessionArg();
+                SessionArg sessionArgs = newSessionCall.getSessionArg();
                 // from session name
-                Name fromName = sessionArg.getFromName();
+                Name fromName = sessionArgs.getFromName();
                 // to session name
-                Name toName = sessionArg.getToName();
+                Name toName = sessionArgs.getToName();
                 // get session args
-                SessionArg tmpSessionArg = null;
+                SessionArg tmpSessionArgs = null;
                 // TODO Check if is needed get new instance
-//                SessionArg sessionArg = new SessionArg(fromName,
+//                SessionArg sessionArgs = new SessionArg(fromName,
 //                                                       toName,
 //                                                       null,
 //                                                       null,
@@ -69,56 +73,85 @@ public class NewSessionTask implements Task {
 
                 Unit unit = unitServiceFactory.getCache().getUnit(name.getName());
                 if (unit != null && (Type.REQUEST_TYPE.O.compareTo(tmpType.getRequestType()) == 0)) {
+                    logger.debug("Unit:%s is in the black list.", name.getName());
                     // time now
                     Date now = new Date();
                     // Get toSessionName
-                    Name toSessionName = NameGetterProvider.get().getToSessionName(tmpType, name, sessionArg); // Get from sessionArgs
+                    Name toSessionName = NameGetterProvider.get().getToSessionName(tmpType, name, sessionArgs); // Get from sessionArgs
                     for (Integer regexId : unit.getRegexIds()) {
                         Date startTimestamp = unit.getStartTimestamp(regexId);
                         Date endTimestamp = unit.getEndTimestamp(regexId);
                         if (startTimestamp.before(now) && (endTimestamp == null || endTimestamp.after(now))) {
-                            // Get Regex
+                            // Regex should never be null. On the table 'unit' primary keys are 'name' and 'regexId'.
                             Regex regex = regexServiceFactory.getCache().getRegex(regexId);
                             // TODO regex == null ??
-                            logger.debug("Execute Id:%s pattern:%s", newSessionCall.getId().getId0(), regex.getPattern());
+                            Id id = newSessionCall.getId();
+                            logger.debug("Execute Id:%s pattern:%s", id.getId0(), regex.getPattern());
                             // Matcher
                             Matcher matcher = regex.getPattern().matcher(toSessionName.getName());
                             if (matcher.lookingAt() && matcher.start() == 0) {
+                                // Prepare and dispatch NewSessionRet
                                 Media newMedia = regex.getNewMedia();
                                 Media endMedia = regex.getEndMedia();
                                 Swap swap = regex.getSwap();
+                                SessionArg tmpSwapSessionArg = null;
 
                                 if (swap != null) {
-                                    logger.info("Execute Id:%s swap:%s", newSessionCall.getId().getId0(), swap.getName());
-                                    SessionArg tmpSwapSessionArg = new SessionArg(null, swap.getName(), null, null, null, null);
+                                    logger.info("Execute Id:%s swap:%s", id.getId0(), swap.getName());
+                                    tmpSwapSessionArg = new SessionArg(null, swap.getName(), null, null, null, null);
                                 }
 
+                                MediaArg mediaArgs = null;
+                                Action mediaAction = null;
+
+                                // End session in any case.
+                                // if new media
                                 if (newMedia != null) {
-                                    logger.info("Execute Id:%s newMedia:%s", newSessionCall.getId().getId0(), newMedia.getName());
-                                    MediaArg tmpMediaArg = new MediaArg(newMedia.getName().getName(),
-                                                                        newMedia.getName().getType(),
-                                                                        newMedia.getValue());
-
-                                    // Media service
-                                    Action.MEDIA_ACTION mediaAction = Action.MEDIA_ACTION.NEW_MEDIA;
-                                    MediaArg mArg = new MediaArg()
-//                                    tmpAction=(byte)(tmpAction | BCFTypeCollection.NEW_MEDIA);
-//                                    tmpMediaArg=new MediaArg(newMedia.getName().getName(), newMedia.getName().getType(), newMedia.getValue());
-//                                    // mediaService
-//                                    MediaService.getMediaService().addEntry(id, type, tmpAction, tmpSessionArg, tmpMediaArg.getMediaArg2(), baseConn.getConnId());
+                                    logger.info("Execute Id:%s newMedia:%s", id.getId0(), newMedia.getName());
+                                    mediaAction = new Action(Action.MEDIA_ACTION.NEW_MEDIA, Action.SESSION_ACTION.END);
+                                    mediaArgs = new MediaArg(newMedia.getMediaName(),
+                                                                      newMedia.getName().getType(),
+                                                                      newMedia.getValue());
                                 }
 
+                                // if end media
+                                if (endMedia != null) {
+                                    logger.info("Execute Id:%s endMedia:%s", id.getId0(), endMedia.getName());
+                                    mediaAction = new Action(Action.MEDIA_ACTION.END_MEDIA, Action.SESSION_ACTION.END);
+                                    mediaArgs = new MediaArg(endMedia.getMediaName(),
+                                                             endMedia.getName().getType(),
+                                                             endMedia.getValue());
+                                }
+
+                                // dispatch message
+                                NewSessionRet newSessionRet = new NewSessionRet(mediaAction, // Action (Session|Media)
+                                                                                tmpSwapSessionArg, // Session args
+                                                                                null, // Watch args
+                                                                                mediaArgs // null media args
+                                                                                );
+                                return newSessionRet.toMessage();
                             } else {
-                                //
+                                // No op
                             }
                         }
                     }
                 }
+                // The unit is not in the black list
+                Action tmpAction = new Action(null, Action.SESSION_ACTION.ACCEPT);
+                NewSessionRet newSessionRet = new NewSessionRet(tmpAction, // Action (Session|Media)
+                                                      sessionArgs, // Session args
+                                                      null, // null watch args
+                                                      null); // null media args
+                logger.debug("Unit:%s is not in the black list.", name.getName());
+                return newSessionRet.toMessage();
             }
         } catch (Throwable ex) {
-            logger.error("Failed on NewSessionTask", ex);
+            logger.error("Failed on NewSessionTask.", ex);
+            logger.error("Message: %s", message.toXML());
         }
 
+        logger.warn("No action can be determined for Unit%s. The session will stop.", newSessionCall.getName().getName());
+        logger.warn("Message: %s", message.toXML());
         return new NewSessionRet(new Action(null, Action.SESSION_ACTION.END), null, null, null).toMessage();
     }
 
