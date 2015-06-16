@@ -1,4 +1,4 @@
-package com.nuevatel.core;
+package com.nuevatel.bcf.core;
 
 /**
  * @author Ariel Salazar

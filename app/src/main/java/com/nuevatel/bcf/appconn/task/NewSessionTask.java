@@ -59,7 +59,6 @@ public class NewSessionTask implements Task {
                 // to session name
                 Name toName = sessionArgs.getToName();
                 // get session args
-                SessionArg tmpSessionArgs = null;
                 // TODO Check if is needed get new instance
 //                SessionArg sessionArgs = new SessionArg(fromName,
 //                                                       toName,

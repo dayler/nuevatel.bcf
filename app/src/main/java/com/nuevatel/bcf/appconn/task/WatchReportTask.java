@@ -5,7 +5,7 @@ import com.nuevatel.base.appconn.Message;
 import com.nuevatel.base.appconn.Task;
 
 /**
- * Created by asalazar on 6/11/15.
+ * @author Ariel Salazar
  */
 public class WatchReportTask implements Task {
 

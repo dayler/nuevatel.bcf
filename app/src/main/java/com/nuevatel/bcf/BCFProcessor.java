@@ -14,7 +14,7 @@ import com.nuevatel.common.exception.InvalidPropertyValueException;
 import com.nuevatel.common.util.IntegerUtil;
 import com.nuevatel.common.util.LongUtil;
 import com.nuevatel.common.util.Parameters;
-import com.nuevatel.core.PropName;
+import com.nuevatel.bcf.core.PropName;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
