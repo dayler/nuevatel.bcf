@@ -2,12 +2,16 @@ package com.nuevatel.bcf;
 
 import com.nuevatel.base.appconn.AppServer;
 import com.nuevatel.base.appconn.TaskSet;
+import com.nuevatel.bcf.appconn.task.EventReportTask;
+import com.nuevatel.bcf.appconn.task.NewSessionTask;
+import com.nuevatel.bcf.appconn.task.TestSessionAsyncTask;
+import com.nuevatel.bcf.appconn.task.WatchReportTask;
 import com.nuevatel.bcf.service.BCFServerFactory;
-import com.nuevatel.bcf.service.MediaServiceFactory;
 import com.nuevatel.bcf.service.RegexCacheLoader;
 import com.nuevatel.bcf.service.RegexServiceFactory;
 import com.nuevatel.bcf.service.UnitCacheLoader;
 import com.nuevatel.bcf.service.UnitServiceFactory;
+import com.nuevatel.cf.appconn.CFMessage;
 import com.nuevatel.common.ds.DataSourceManagerConfigurator;
 import com.nuevatel.common.ds.JDBCProperties;
 import com.nuevatel.common.exception.InvalidPropertyValueException;
@@ -51,8 +55,6 @@ public class BCFProcessor implements Processor {
 
     private BCFServerFactory bcfServerFactory = new BCFServerFactory();
 
-    private MediaServiceFactory mediaServiceFactory = new MediaServiceFactory();
-
     /**
      * Initialize processor, it cannot start the services, to start the service execute <b>execute</b> method.
      *
@@ -91,9 +93,6 @@ public class BCFProcessor implements Processor {
         // Configure data source manager
         configureDatasourceManager(prop);
         logger.info("Datasource Manager was started...");
-        // Start media service
-        configureMediaService(prop);
-        logger.info("Media Service was started...");
         // Configure Regex service
         configureRegexService(prop);
         logger.info("UnitService was started...");
@@ -106,13 +105,13 @@ public class BCFProcessor implements Processor {
         bcfServerFactory.start(bcfId, taskSet, prop);
     }
 
-    private void configureMediaService(Properties prop) {
-        Integer size = IntegerUtil.tryParse(prop.getProperty(PropName.bcf_service_media_size.property()));
-        mediaServiceFactory.start(size);
-    }
-
     private TaskSet getTaskSet() {
-        return new TaskSet();
+        TaskSet taskSet = new TaskSet();
+        taskSet.add(CFMessage.NEW_SESSION_CALL, new NewSessionTask());
+        taskSet.add(CFMessage.EVENT_REPORT_CALL, new EventReportTask());
+        taskSet.add(CFMessage.WATCH_REPORT_CALL, new WatchReportTask());
+        taskSet.add(CFMessage.TEST_SESSION_ASYNC_RET, new TestSessionAsyncTask());
+        return taskSet;
     }
 
     @Override

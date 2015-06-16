@@ -4,6 +4,7 @@
 # Package Files #
 build/*.jar
 bin/*.jar
+*/target/**
 *.war
 *.ear
 *.log
