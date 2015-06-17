@@ -46,6 +46,9 @@ public class NewSessionTask implements Task {
     public Message execute(Conn conn, Message message) throws Exception {
         NewSessionCall newSessionCall = new NewSessionCall(message);
         try {
+            if (logger.isDebugEnabled() || logger.isTraceEnabled()) {
+                logger.debug("NewSessionTask message:%s", message.toXML());
+            }
             // NewSessionCall
             if (checkNewSessionCall(newSessionCall)) {
                 // Get type
@@ -107,7 +110,7 @@ public class NewSessionTask implements Task {
                                 // if new media
                                 if (newMedia != null) {
                                     logger.info("Execute Id:%s newMedia:%s", id.getId0(), newMedia.getName());
-                                    mediaAction = new Action(Action.MEDIA_ACTION.NEW_MEDIA, Action.SESSION_ACTION.END);
+                                    mediaAction = new Action(Action.MEDIA_ACTION.NEW_MEDIA, Action.SESSION_ACTION.ACCEPT);
                                     mediaArgs = new MediaArg(newMedia.getMediaName(),
                                                                       newMedia.getName().getType(),
                                                                       newMedia.getValue());
