@@ -1,9 +1,19 @@
-package com.nuevatel.bcf.entity;
+package com.nuevatel.bcf.core.entity;
 
 /**
  * Created by asalazar on 6/6/15.
  */
 public enum SQLQuery {
+    get_session_record_by_id(""),
+
+    insert_new_session_record(
+            "insert session_record(id, name, regex_id, new_media_id, end_media_id, swap_id, start_timestamp, end_timestamp)\n" +
+            "values (?, ?, ?, ?, ?, ?, ?, ?);"),
+
+    update_session_record_end_timestamp("update session_record\n" +
+                                        "set end_timestamp=current_timestamp\n" +
+                                        "where id=?;"),
+
     /**
      *Query to retrieve Unit object from Unit.name.
      * <br/><br/>

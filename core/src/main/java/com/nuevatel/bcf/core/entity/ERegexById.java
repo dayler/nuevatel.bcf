@@ -1,4 +1,4 @@
-package com.nuevatel.bcf.entity;
+package com.nuevatel.bcf.core.entity;
 
 /**
  * Map for SQLQuery.select_unit_by_name result set.

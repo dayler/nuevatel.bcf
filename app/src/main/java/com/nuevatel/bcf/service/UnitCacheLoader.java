@@ -2,12 +2,11 @@ package com.nuevatel.bcf.service;
 
 import com.google.common.cache.CacheLoader;
 import com.nuevatel.bcf.domain.Unit;
-import com.nuevatel.bcf.entity.SQLQuery;
-import com.nuevatel.bcf.entity.EUnit;
+import com.nuevatel.bcf.core.entity.SQLQuery;
+import com.nuevatel.bcf.core.entity.EUnit;
 import com.nuevatel.bcf.exception.UnitNotFoundException;
 import com.nuevatel.common.ds.DataSourceManager;
 import com.nuevatel.common.ds.DataSourceManagerImpl;
-import com.nuevatel.common.exception.OperationException;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
