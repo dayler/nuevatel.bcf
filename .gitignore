@@ -13,6 +13,9 @@ nbproject/private/
 build/
 dist/
 
+# idea ignore #
+.idea/**
+
 # eclipse workspace #
 .metadata
 
