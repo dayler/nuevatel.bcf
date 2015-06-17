@@ -10,7 +10,6 @@ import com.nuevatel.common.util.Parameters;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.concurrent.RunnableScheduledFuture;
 import java.util.concurrent.ScheduledFuture;
 
 /**
@@ -42,7 +41,7 @@ class MediaDispatcher implements Runnable {
 
     private ScheduledFuture<?>schFuture;
 
-    private BCFServerFactory bcfServerFactory = new BCFServerFactory();
+    private AppServerFactory bcfServerFactory = new AppServerFactory();
 
     private Runnable callBack;
 

@@ -1,5 +1,6 @@
 package com.nuevatel.bcf.service;
 
+import com.nuevatel.base.appconn.AppServer;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -10,12 +11,12 @@ import static org.mockito.Mockito.*;
 /**
  * Test Class for BCFServer
  */
-public class BCFServerFactoryTest {
+public class AppServerFactoryTest {
 
-    private BCFServerFactory bcfServerFactory = null;
+    private AppServerFactory bcfServerFactory = null;
 
     @Mock
-    private BCFServer server;
+    private AppServer server;
 
     @Before
     public void setUp() throws Exception {
@@ -23,7 +24,7 @@ public class BCFServerFactoryTest {
         // Mock bcf server
         doNothing().when(server).start();
         doNothing().when(server).interrupt();
-        bcfServerFactory = new BCFServerFactory(server);
+        bcfServerFactory = new AppServerFactory(server);
     }
 
     public void teardown() throws Exception {

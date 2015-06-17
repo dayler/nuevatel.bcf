@@ -6,7 +6,7 @@ import com.nuevatel.bcf.appconn.task.EventReportTask;
 import com.nuevatel.bcf.appconn.task.NewSessionTask;
 import com.nuevatel.bcf.appconn.task.TestSessionAsyncTask;
 import com.nuevatel.bcf.appconn.task.WatchReportTask;
-import com.nuevatel.bcf.service.BCFServerFactory;
+import com.nuevatel.bcf.service.AppServerFactory;
 import com.nuevatel.bcf.service.RegexCacheLoader;
 import com.nuevatel.bcf.service.RegexServiceFactory;
 import com.nuevatel.bcf.service.UnitCacheLoader;
@@ -53,7 +53,7 @@ public class BCFProcessor implements Processor {
 
     private int bcfId;
 
-    private BCFServerFactory bcfServerFactory = new BCFServerFactory();
+    private AppServerFactory bcfServerFactory = new AppServerFactory();
 
     /**
      * Initialize processor, it cannot start the services, to start the service execute <b>execute</b> method.
@@ -103,6 +103,7 @@ public class BCFProcessor implements Processor {
         TaskSet taskSet = getTaskSet();
         // Initialize AppConnServer
         bcfServerFactory.start(bcfId, taskSet, prop);
+        logger.info("AppConnServer was started...");
     }
 
     private TaskSet getTaskSet() {
