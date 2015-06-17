@@ -1,7 +1,5 @@
 package com.nuevatel.bcf;
 
-import java.util.Properties;
-
 /**
  * Get from configuration the NameGetter Action class.
  *
