@@ -1,5 +1,6 @@
 package com.nuevatel.bcf.service;
 
+import com.nuevatel.base.appconn.AppServer;
 import com.nuevatel.base.appconn.TaskSet;
 
 import java.util.Properties;
@@ -7,15 +8,15 @@ import java.util.Properties;
 /**
  * Created by asalazar on 6/14/15.
  */
-public final class BCFServerFactory {
+public final class AppServerFactory {
 
-    private static BCFServer server = null;
+    private static AppServer server = null;
 
-    public BCFServerFactory(BCFServer srv) {
-        BCFServerFactory.server = srv;
+    public AppServerFactory(AppServer srv) {
+        AppServerFactory.server = srv;
     }
 
-    public BCFServerFactory() {
+    public AppServerFactory() {
         // No op. used to prevent instantiation.
     }
 
@@ -26,8 +27,9 @@ public final class BCFServerFactory {
      * @param taskSet
      * @param prop
      */
-    public synchronized void start(Integer id, TaskSet taskSet, Properties prop) {
-        server = new BCFServer(id, taskSet, prop);
+    public synchronized void start(Integer id, TaskSet taskSet, Properties prop) throws Exception {
+        server = new AppServer(id, taskSet, prop);
+        // new AppServer(appId, appServerTaskSet, appServerProperties);
         server.start();
     }
 
@@ -42,7 +44,7 @@ public final class BCFServerFactory {
      *
      * @return Return the started service. If the service is not started yet returns null.
      */
-    public synchronized BCFServer get() {
+    public synchronized AppServer get() {
         return server;
     }
 }

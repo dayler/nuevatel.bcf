@@ -1,8 +1,0 @@
-com/nuevatel/bcf/ShutdownHookTest.class
-com/nuevatel/bcf/service/UnitCacheLoaderTest.class
-com/nuevatel/bcf/service/UnitServiceFactoryTest.class
-com/nuevatel/bcf/service/RegexCacheLoaderTest.class
-com/nuevatel/bcf/service/RegexServiceFactoryTest.class
-com/nuevatel/bcf/service/UnitServiceImplTest.class
-com/nuevatel/bcf/service/RegexServiceImplTest.class
-com/nuevatel/bcf/stub/DatasourceUtils.class

@@ -11,7 +11,7 @@ import java.util.Properties;
 /**
  * Main class for BCF app.
  *
- * Created by asalazar on 6/4/15.
+ * @author Ariel Salazar
  */
 public class BCF {
 
@@ -29,10 +29,9 @@ public class BCF {
 
             // Start BCF Processor.
              bcfProcessor.execute();
-            logger.error("BCFProcessor was started...");
+            logger.info("BCFProcessor was started...");
 
             Runtime.getRuntime().addShutdownHook(hook);
-            System.out.println("Hello world...");
         } catch (Throwable ex) {
             logger.fatal("Failed to initialize BCF Stand alone app...", ex);
             System.exit(1);
