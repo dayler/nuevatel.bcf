@@ -1,0 +1,5 @@
+REGEX_ID,REGEX_NAME,REGEX,NEW_MEDIA_ID,END_MEDIA_ID,SWAP_ID
+3,cotel_regex_3,(((591)|0)?(2|3|4|6|7).+),,,1
+4,cotel_regex_4,0?0?14.+,,,1
+1,cotel_regex_1,0?0?14.+|(((591)|0)?(2|3|4|6|7).+),,,1
+2,cotel_regex_2,0?0?14.+|(((591)|0)?(2|3|4|6|7).+),1,,

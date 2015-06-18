@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="asalazar" created="Wed Jun 10 17:36:03 BOT 2015" guiVersion="3.5.1" id="1433972175485" licenseType="Community" modified="Thu Jun 11 10:57:22 BOT 2015" modifiedBy="asalazar" name="load_bcf" revision="1.33" showComponentDetails="true">
+<Global>
+<Metadata id="Metadata2" previewAttachment="${DATAIN_DIR}/media.csv" previewAttachmentCharset="ISO-8859-1">
+<Record fieldDelimiter="," label="media.csv" name="media_csv" previewAttachment="${DATAIN_DIR}/media.csv" previewAttachmentCharset="ISO-8859-1" quoteChar="both" quotedStrings="false" recordDelimiter="\r\n" skipSourceRows="1" type="delimited">
+<Field name="MEDIA_ID" type="integer"/>
+<Field name="MEDIA_NAME" type="string"/>
+<Field name="NAME" type="string"/>
+<Field name="TYPE" type="integer"/>
+<Field eofAsDelimiter="true" name="VALUE" type="integer"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata3" previewAttachment="${DATAIN_DIR}/regex.csv" previewAttachmentCharset="ISO-8859-1">
+<Record fieldDelimiter="," label="regex.csv" name="regex_csv" previewAttachment="${DATAIN_DIR}/regex.csv" previewAttachmentCharset="ISO-8859-1" quoteChar="both" quotedStrings="false" recordDelimiter="\r\n" skipSourceRows="1" type="delimited">
+<Field name="REGEX_ID" type="integer"/>
+<Field name="REGEX_NAME" type="string"/>
+<Field name="REGEX" type="string"/>
+<Field name="NEW_MEDIA_ID" type="integer"/>
+<Field name="END_MEDIA_ID" type="string"/>
+<Field eofAsDelimiter="true" name="SWAP_ID" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata1" previewAttachment="${DATAIN_DIR}/swap.csv" previewAttachmentCharset="ISO-8859-1">
+<Record fieldDelimiter="," label="swap.csv" name="swap_csv" previewAttachment="${DATAIN_DIR}/swap.csv" previewAttachmentCharset="ISO-8859-1" quoteChar="both" quotedStrings="false" recordDelimiter="\r\n" skipSourceRows="1" type="delimited">
+<Field name="SWAP_ID" type="integer"/>
+<Field name="SWAP_NAME" type="string"/>
+<Field name="NAME" type="string"/>
+<Field eofAsDelimiter="true" name="TYPE" type="integer"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata0" previewAttachment="${DATAIN_DIR}/unit.csv" previewAttachmentCharset="ISO-8859-1">
+<Record fieldDelimiter="," label="unit.csv" name="unit_csv" previewAttachment="${DATAIN_DIR}/unit.csv" previewAttachmentCharset="ISO-8859-1" quoteChar="both" quotedStrings="false" recordDelimiter="\r\n" skipSourceRows="1" type="delimited">
+<Field name="NAME" type="string"/>
+<Field name="REGEX_ID" type="integer"/>
+<Field format="dd/MM/yy" name="CREATION_TIMESTAMP" type="date"/>
+<Field format="dd/MM/yy" name="START_TIMESTAMP" type="date"/>
+<Field eofAsDelimiter="true" name="END_TIMESTAMP" type="date"/>
+</Record>
+</Metadata>
+<Connection database="MYSQL" dbURL="jdbc:mysql://10.40.3.131:3306/bcfTest" id="JDBC0" jdbcSpecific="MYSQL" name="bcf" password="dev4DM" type="JDBC" user="root"/>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<Note alignment="1" backgroundColorB="225" backgroundColorG="255" backgroundColorR="255" enabled="true" folded="false" height="253" id="Note0" textColorB="0" textColorG="0" textColorR="0" textFontSize="12" title="LOAD UNIT" titleColorB="0" titleColorG="0" titleColorR="0" titleFontSize="14" width="669" x="31" y="22"/>
+<Note alignment="1" backgroundColorB="225" backgroundColorG="255" backgroundColorR="255" enabled="true" folded="false" height="271" id="Note1" textColorB="0" textColorG="0" textColorR="0" textFontSize="12" title="LOAD SWAP" titleColorB="0" titleColorG="0" titleColorR="0" titleFontSize="14" width="669" x="31" y="321"/>
+<Note alignment="1" backgroundColorB="225" backgroundColorG="255" backgroundColorR="255" enabled="true" folded="false" height="245" id="Note2" textColorB="0" textColorG="0" textColorR="0" textFontSize="12" title="LOAD MEDIA" titleColorB="0" titleColorG="0" titleColorR="0" titleFontSize="14" width="669" x="31" y="634"/>
+<Note alignment="1" backgroundColorB="225" backgroundColorG="255" backgroundColorR="255" enabled="true" folded="false" height="260" id="Note3" textColorB="0" textColorG="0" textColorR="0" textFontSize="12" title="LOAD REGEX" titleColorB="0" titleColorG="0" titleColorR="0" titleFontSize="14" width="669" x="31" y="921"/>
+<Dictionary/>
+</Global>
+<Phase number="1">
+<Node dbConnection="JDBC0" enabled="enabled" guiName="DBOutputTable" guiX="303" guiY="365" id="DBOUTPUT_TABLE1" type="DB_OUTPUT_TABLE">
+<attr name="sqlQuery"><![CDATA[INSERT INTO \`swap\` (\`swap_id\`, \`swap_name\`, \`name\`, \`type\`)
+VALUES ($SWAP_ID, $SWAP_NAME, $NAME, $TYPE)]]></attr>
+</Node>
+<Node enabled="enabled" fileURL="${DATAIN_DIR}/swap.csv" guiName="UniversalDataReader" guiX="72" guiY="365" id="UNIVERSAL_DATA_READER1" type="DATA_READER">
+<attr name="guiDescription"><![CDATA[swap.csv]]></attr>
+</Node>
+<Node enabled="enabled" fileURL="${DATAOUT_DIR}/load_swap.log" guiName="UniversalDataWriter" guiX="513" guiY="365" id="UNIVERSAL_DATA_WRITER1" type="DATA_WRITER"/>
+<Node enabled="enabled" fileURL="${DATAOUT_DIR}/err_swap.log" guiName="UniversalDataWriter" guiX="513" guiY="465" id="UNIVERSAL_DATA_WRITER5" type="DATA_WRITER"/>
+<Edge fromNode="DBOUTPUT_TABLE1:0" guiBendpoints="" guiRouter="Manhattan" id="Edge5" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (rejected)" toNode="UNIVERSAL_DATA_WRITER1:0"/>
+<Edge fromNode="DBOUTPUT_TABLE1:1" guiBendpoints="" guiRouter="Manhattan" id="Edge7" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 1 (autogenerated)" toNode="UNIVERSAL_DATA_WRITER5:0"/>
+<Edge fromNode="UNIVERSAL_DATA_READER1:0" guiBendpoints="" guiRouter="Manhattan" id="Edge3" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (output)" toNode="DBOUTPUT_TABLE1:0"/>
+</Phase>
+<Phase number="2">
+<Node dbConnection="JDBC0" enabled="enabled" guiName="DBOutputTable" guiX="303" guiY="692" id="DBOUTPUT_TABLE2" type="DB_OUTPUT_TABLE">
+<attr name="sqlQuery"><![CDATA[INSERT INTO \`media\` (\`media_id\`, \`media_name\`, \`name\`, \`type\`, \`value\`)
+VALUES ($MEDIA_ID, $MEDIA_NAME, $NAME, $VALUE, $VALUE)]]></attr>
+</Node>
+<Node enabled="enabled" fileURL="${DATAIN_DIR}/media.csv" guiName="UniversalDataReader" guiX="72" guiY="692" id="UNIVERSAL_DATA_READER2" type="DATA_READER">
+<attr name="guiDescription"><![CDATA[media.csv]]></attr>
+</Node>
+<Node enabled="enabled" fileURL="${DATAOUT_DIR}/load_media.log" guiName="UniversalDataWriter" guiX="513" guiY="692" id="UNIVERSAL_DATA_WRITER2" type="DATA_WRITER"/>
+<Node enabled="enabled" fileURL="${DATAOUT_DIR}/err_media.log" guiName="UniversalDataWriter" guiX="513" guiY="786" id="UNIVERSAL_DATA_WRITER6" type="DATA_WRITER"/>
+<Edge fromNode="DBOUTPUT_TABLE2:0" guiBendpoints="" guiRouter="Manhattan" id="Edge8" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 0 (rejected)" toNode="UNIVERSAL_DATA_WRITER2:0"/>
+<Edge fromNode="DBOUTPUT_TABLE2:1" guiBendpoints="" guiRouter="Manhattan" id="Edge12" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 1 (autogenerated)" toNode="UNIVERSAL_DATA_WRITER6:0"/>
+<Edge fromNode="UNIVERSAL_DATA_READER2:0" guiBendpoints="" guiRouter="Manhattan" id="Edge6" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 0 (output)" toNode="DBOUTPUT_TABLE2:0"/>
+</Phase>
+<Phase number="3">
+<Node dbConnection="JDBC0" enabled="enabled" guiName="DBOutputTable" guiX="303" guiY="976" id="DBOUTPUT_TABLE3" type="DB_OUTPUT_TABLE">
+<attr name="sqlQuery"><![CDATA[INSERT INTO \`regex\` (\`regex_id\`, \`regex_name\`, \`regex\`, \`new_media_id\`, \`end_media_id\`, \`swap_id\`)
+VALUES ($REGEX_ID, $REGEX_NAME, $REGEX, $NEW_MEDIA_ID, $END_MEDIA_ID, $SWAP_ID)]]></attr>
+</Node>
+<Node enabled="enabled" fileURL="${DATAIN_DIR}/regex.csv" guiName="UniversalDataReader" guiX="72" guiY="976" id="UNIVERSAL_DATA_READER3" type="DATA_READER">
+<attr name="guiDescription"><![CDATA[regex.csv]]></attr>
+</Node>
+<Node enabled="enabled" fileURL="${DATAOUT_DIR}/load_regex.log" guiName="UniversalDataWriter" guiX="513" guiY="976" id="UNIVERSAL_DATA_WRITER3" type="DATA_WRITER"/>
+<Node enabled="enabled" fileURL="${DATAOUT_DIR}/err_regex.log" guiName="UniversalDataWriter" guiX="513" guiY="1072" id="UNIVERSAL_DATA_WRITER7" type="DATA_WRITER"/>
+<Edge fromNode="DBOUTPUT_TABLE3:0" guiBendpoints="" guiRouter="Manhattan" id="Edge11" inPort="Port 0 (in)" metadata="Metadata3" outPort="Port 0 (rejected)" toNode="UNIVERSAL_DATA_WRITER3:0"/>
+<Edge fromNode="DBOUTPUT_TABLE3:1" guiBendpoints="" guiRouter="Manhattan" id="Edge13" inPort="Port 0 (in)" metadata="Metadata3" outPort="Port 1 (autogenerated)" toNode="UNIVERSAL_DATA_WRITER7:0"/>
+<Edge fromNode="UNIVERSAL_DATA_READER3:0" guiBendpoints="" guiRouter="Manhattan" id="Edge9" inPort="Port 0 (in)" metadata="Metadata3" outPort="Port 0 (output)" toNode="DBOUTPUT_TABLE3:0"/>
+</Phase>
+<Phase number="4">
+<Node dbConnection="JDBC0" enabled="enabled" guiName="DBOutputTable" guiX="303" guiY="66" id="DBOUTPUT_TABLE" type="DB_OUTPUT_TABLE">
+<attr name="sqlQuery"><![CDATA[INSERT INTO \`unit\` (\`name\`, \`regex_id\`, \`creation_timestamp\`, \`start_timestamp\`, \`end_timestamp\`)
+VALUES ($NAME, $REGEX_ID, $CREATION_TIMESTAMP, $START_TIMESTAMP, $END_TIMESTAMP)]]></attr>
+</Node>
+<Node enabled="enabled" fileURL="${DATAIN_DIR}/unit.csv" guiName="UniversalDataReader" guiX="72" guiY="66" id="UNIVERSAL_DATA_READER" type="DATA_READER">
+<attr name="guiDescription"><![CDATA[unit.csv]]></attr>
+</Node>
+<Node append="false" enabled="enabled" fileURL="${DATAOUT_DIR}/load_unit.log" guiName="UniversalDataWriter" guiX="513" guiY="66" id="UNIVERSAL_DATA_WRITER" makeDirs="true" type="DATA_WRITER"/>
+<Node append="false" enabled="enabled" fileURL="${DATAOUT_DIR}/err_unit.log" guiName="UniversalDataWriter" guiX="513" guiY="165" id="UNIVERSAL_DATA_WRITER4" makeDirs="true" type="DATA_WRITER"/>
+<Edge fromNode="DBOUTPUT_TABLE:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (rejected)" toNode="UNIVERSAL_DATA_WRITER:0"/>
+<Edge fromNode="DBOUTPUT_TABLE:1" guiBendpoints="" guiRouter="Manhattan" id="Edge4" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 1 (autogenerated)" toNode="UNIVERSAL_DATA_WRITER4:0"/>
+<Edge fromNode="UNIVERSAL_DATA_READER:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (output)" toNode="DBOUTPUT_TABLE:0"/>
+</Phase>
+</Graph>
