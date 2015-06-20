@@ -78,7 +78,7 @@ public class RegexCacheLoader extends CacheLoader<Integer, Regex> {
                 try {
                     pattern = Pattern.compile(tmpRegex);
                 } catch (PatternSyntaxException ex) {
-                    logger.warn("Failed to compile pattern '%s' for regexId '%s'", tmpRegex, regexId);
+                    logger.warn("Failed to compile pattern '{}' for regexId '{}'", tmpRegex, regexId);
                 }
                 // Build Regex
                 regex = new Regex(regexId, rxName, pattern, newMedia, endMedia, swap);

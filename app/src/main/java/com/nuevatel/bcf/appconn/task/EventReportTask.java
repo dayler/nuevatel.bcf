@@ -25,14 +25,14 @@ public class EventReportTask implements Task {
     public Message execute(Conn conn, Message message) throws Exception {
         try {
             if (logger.isDebugEnabled() || logger.isTraceEnabled()) {
-                logger.debug("EventReportCall message:%s", message.toXML());
+                logger.debug("EventReportCall message:{}", message.toXML());
             }
             //EventReportCall, only to verify that the message was received by the server.
             EventReportCall eventReportCall = new EventReportCall(message);
             WatchArg watchArgs = new WatchArg(WATCH_ARCG0, null, null, null, null, null);
             return new EventReportRet(new Action(null, Action.SESSION_ACTION.ACCEPT), watchArgs, null).toMessage();
         } catch (Throwable ex) {
-            logger.warn("Failed to build EventReportRet. appId:%s messageId:%s",conn.getRemoteId(), message.getCode(), ex);
+            logger.warn("Failed to build EventReportRet. appId:{} messageId:{}",conn.getRemoteId(), message.getCode(), ex);
             return new EventReportRet(new Action(null, Action.SESSION_ACTION.END), null, null).toMessage();
         }
     }

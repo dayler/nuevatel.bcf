@@ -8,8 +8,6 @@ import com.nuevatel.common.util.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.concurrent.ExecutionException;
-
 /**
  * Created by asalazar on 6/6/15.
  */
@@ -33,7 +31,7 @@ class UnitServiceImpl implements UnitService {
                 return null;
             }
 
-            String msg = String.format("Failed to get Unit for '%s'", name);
+            String msg = String.format("Failed to get Unit for '{}'", name);
             throw new OperationException(msg);
         }
     }

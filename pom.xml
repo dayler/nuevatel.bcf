@@ -12,8 +12,7 @@
     <modules>
         <module>core</module>
         <module>app</module>
-
-        <!-- <module>wsi</module> -->
+        <module>wsi</module>
     </modules>
     <distributionManagement>
         <repository>

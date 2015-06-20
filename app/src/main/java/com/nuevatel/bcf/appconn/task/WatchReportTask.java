@@ -25,14 +25,14 @@ public class WatchReportTask implements Task {
     public Message execute(Conn conn, Message message) throws Exception {
         try {
             if (logger.isDebugEnabled() || logger.isTraceEnabled()) {
-                logger.debug("WatchReportTask message:%s", message.toXML());
+                logger.debug("WatchReportTask message:{}", message.toXML());
             }
             // watchReportCall
             WatchReportCall watchReportCall = new WatchReportCall(message);
             WatchArg watchArgs = new WatchArg(WATCH_ARCG0, null, null, null, null, null);
             return new WatchReportRet(new Action(null, Action.SESSION_ACTION.ACCEPT), watchArgs, null).toMessage();
         } catch (Throwable ex) {
-            logger.warn("Failed to build WatchReportTask. appId:%s messageId:%s",conn.getRemoteId(), message.getCode(), ex);
+            logger.warn("Failed to build WatchReportTask. appId:{} messageId:{}",conn.getRemoteId(), message.getCode(), ex);
             return new WatchReportRet(new Action(null, Action.SESSION_ACTION.END), null, null).toMessage();
         }
     }

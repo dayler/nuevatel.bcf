@@ -4,14 +4,29 @@ package com.nuevatel.bcf.core.entity;
  * Created by asalazar on 6/6/15.
  */
 public enum SQLQuery {
-    get_session_record_by_id(""),
+    get_session_record_by_id(
+            "select id, name, regex_id, new_media_id, end_media_id, swap_id, start_timestamp, end_timestamp, resp_code\n" +
+            "\tfrom session_record\n" +
+            "where id=?;"),
+
+    update_session_record(
+            "update session_record\n" +
+            "set name=?,\n" +
+            "\tregex_id=?,\n" +
+            "\tnew_media_id=?,\n" +
+            "\tend_media_id=?, \n" +
+            "\tswap_id=?,\n" +
+            "\tstart_timestamp=?,\n" +
+            "\tend_timestamp=?,\n" +
+            "\tresp_code=?\n" +
+            "where id=?;"),
 
     insert_new_session_record(
-            "insert session_record(id, name, regex_id, new_media_id, end_media_id, swap_id, start_timestamp, end_timestamp)\n" +
-            "values (?, ?, ?, ?, ?, ?, ?, ?);"),
+            "insert session_record(id, name, regex_id, new_media_id, end_media_id, swap_id, start_timestamp, end_timestamp, resp_code)\n" +
+            "values (?, ?, ?, ?, ?, ?, ?, ?, ?);"),
 
     update_session_record_end_timestamp("update session_record\n" +
-                                        "set end_timestamp=current_timestamp\n" +
+                                        "set end_timestamp=?, resp_code=?\n" +
                                         "where id=?;"),
 
     /**
@@ -38,7 +53,7 @@ public enum SQLQuery {
      *      em.type as end_media_type,<br/>
      *      em.value as end_media_value,<br/>
      *      r.swap_id as swap_id,<br/>
-     *      s.name as swap_name,<br/>
+     *      concat('591', s.name) as swap_name,<br/>
      *      s.swap_name as swap_swap_name,<br/>
      *      s.type as swap_type<br/>
      *  from regex as r,<br/>
@@ -60,13 +75,13 @@ public enum SQLQuery {
             "    nm.name as new_media_name,\n" +
             "    nm.type as new_media_type,\n" +
             "    nm.value as new_media_value,\n" +
-            "    r.new_media_id as end_media_id,\n" +
+            "    r.end_media_id as end_media_id,\n" +
             "    em.media_name as end_media_media_name,\n" +
             "    em.name as end_media_name,\n" +
             "    em.type as end_media_type,\n" +
             "    em.value as end_media_value,\n" +
             "    r.swap_id as swap_id,\n" +
-            "    s.name as swap_name,\n" +
+            "    concat('591', s.name) as swap_name,\n" +
             "    s.swap_name as swap_swap_name,\n" +
             "    s.type as swap_type\n" +
             "from regex as r\n" +

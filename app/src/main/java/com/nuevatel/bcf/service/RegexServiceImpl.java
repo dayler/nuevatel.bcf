@@ -30,7 +30,7 @@ class RegexServiceImpl implements RegexService {
                 return null;
             }
 
-            String msg = String.format("Failed to get Regex for '%s'", regexId);
+            String msg = String.format("Failed to get Regex for '{}'", regexId);
             throw new OperationException(msg, ex);
         }
     }

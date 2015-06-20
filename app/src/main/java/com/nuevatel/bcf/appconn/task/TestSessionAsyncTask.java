@@ -21,7 +21,7 @@ public class TestSessionAsyncTask implements Task {
     @Override
     public Message execute(Conn conn, Message message) throws Exception {
         if (logger.isDebugEnabled() || logger.isTraceEnabled()) {
-            logger.debug("TestSessionAsyncTask message:%s", message == null ? null : message.toXML());
+            logger.debug("TestSessionAsyncTask message:{}", message == null ? null : message.toXML());
         }
         return null;
     }

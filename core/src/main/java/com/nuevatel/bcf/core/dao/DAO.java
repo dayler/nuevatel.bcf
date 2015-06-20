@@ -18,11 +18,11 @@ public interface DAO <K, T> {
      * @param key Primary key, used to find the record.
      * @return The record to corresponds with K:key
      */
-    T findById(K key);
+    T findById(K key) throws SQLException;
 
     /**
      *
      * @param record Record to update in the database.
      */
-    void update(T record);
+    void update(T record) throws SQLException;
 }

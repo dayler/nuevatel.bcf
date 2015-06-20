@@ -25,6 +25,8 @@ public class SessionRecord {
 
     private Date endTimestamp = null;
 
+    private Integer respCode = null;
+
     public String getId() {
         return id;
     }
@@ -87,5 +89,13 @@ public class SessionRecord {
 
     public void setEndTimestamp(Date endTimestamp) {
         this.endTimestamp = endTimestamp;
+    }
+
+    public void setRespCode(Integer respCode) {
+        this.respCode = respCode;
+    }
+
+    public Integer getRespCode() {
+        return respCode;
     }
 }

@@ -49,6 +49,9 @@ public class ShutdownHookTest {
         Thread.sleep(500);
         // Verify
         verify(p1, times(1)).shutdown(anyInt());
+
+
+        System.out.println("59165380073f".substring("591".length(), "59165380073f".length() - 1));
     }
 
     @Test

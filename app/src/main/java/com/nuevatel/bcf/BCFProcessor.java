@@ -3,6 +3,7 @@ package com.nuevatel.bcf;
 import com.nuevatel.base.appconn.AppServer;
 import com.nuevatel.base.appconn.TaskSet;
 import com.nuevatel.bcf.appconn.task.EventReportTask;
+import com.nuevatel.bcf.appconn.task.GetMediaTask;
 import com.nuevatel.bcf.appconn.task.NewSessionTask;
 import com.nuevatel.bcf.appconn.task.TestSessionAsyncTask;
 import com.nuevatel.bcf.appconn.task.WatchReportTask;
@@ -112,6 +113,7 @@ public class BCFProcessor implements Processor {
         taskSet.add(CFMessage.EVENT_REPORT_CALL, new EventReportTask());
         taskSet.add(CFMessage.WATCH_REPORT_CALL, new WatchReportTask());
         taskSet.add(CFMessage.TEST_SESSION_ASYNC_RET, new TestSessionAsyncTask());
+        taskSet.add(CFMessage.GET_MEDIA_CALL, new GetMediaTask());
         return taskSet;
     }
 
@@ -123,7 +125,7 @@ public class BCFProcessor implements Processor {
             // Stop appconn server
             appServer.interrupt();
         } catch (InterruptedException ex) {
-            logger.warn("Failed to shutdown process.");
+            logger.warn("Failed to shutdown process.", ex);
         }
     }
 

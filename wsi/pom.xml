@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>bcf</artifactId>
+        <groupId>com.nuevatel.bcf</groupId>
+        <version>1.0</version>
+    </parent>
+    <artifactId>wsi</artifactId>
+    <name>BCF WSI</name>
+    <version>1.0</version>
+    
+    <build>
+        <plugins>
+            <!--Add base library -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>2.5.2</version>
+                <executions>
+                    <execution>
+                        <id>hack-binary</id>
+                        <phase>clean</phase>
+                        <configuration>
+                            <file>lib/base.jar</file>
+                            <repositoryLayout>default</repositoryLayout>
+                            <groupId>com.nuevatel.base</groupId>
+                            <artifactId>base</artifactId>
+                            <version>1.0</version>
+                            <packaging>jar</packaging>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- add wsgen plugin -->                       
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>Module repository</id>
+            <releases>
+                <enabled>true</enabled>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <url>file://${basedir}/lib</url>
+        </repository>
+        <repository>
+            <id>jahia</id>
+            <url>http://maven.jahia.org/maven2/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.nuevatel.bcf</groupId>
+            <artifactId>core</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.nuevatel.base</groupId>
+            <artifactId>base</artifactId>
+            <version>1.0</version>
+        </dependency>        
+    </dependencies>
+</project>
