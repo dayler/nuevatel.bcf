@@ -7,7 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Created by asalazar on 6/11/15.
+ * TODO Not needed, remove me!!
  */
 public class GetMediaTask implements Task {
 

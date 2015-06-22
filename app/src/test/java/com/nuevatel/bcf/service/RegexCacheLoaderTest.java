@@ -1,11 +1,14 @@
 package com.nuevatel.bcf.service;
 
+import com.nuevatel.bcf.core.dao.DatabaseHelper;
 import com.nuevatel.bcf.domain.Regex;
 import com.nuevatel.bcf.exception.RegexNotFoundException;
 import com.nuevatel.bcf.stub.DatasourceUtils;
 import com.nuevatel.common.ds.DataSourceManager;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.InputStream;
@@ -30,10 +33,19 @@ public class RegexCacheLoaderTest {
     public static final String TEST2_REGEX_NAME = "cotel_regex_1";
     public static final String TEST2_REGEX_PATTERN = "0?0?14.+|(((591)|0)?(2|3|4|6|7).+)";
 
-    private DataSourceManager ds = null;
+    private static DataSourceManager ds = null;
 
     private RegexCacheLoader loader = null;
 
+    @BeforeClass
+    public static void beforeClass() throws Exception {
+        // No op
+    }
+
+    @AfterClass
+    public static void afterClass() throws Exception {
+        // No op
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -89,7 +101,7 @@ public class RegexCacheLoaderTest {
         fail("No Impl");
     }
 
-    private void createDatasourceManager() throws Exception {
+    private static void createDatasourceManager() throws Exception {
         InputStream is = null;
         try {
             Properties prop = new Properties();
@@ -103,9 +115,7 @@ public class RegexCacheLoaderTest {
         }
     }
 
-    private void shutdownDatasourceManager() throws Exception {
-        if (ds != null) {
-            ds.shutdownConnPool();
-        }
+    private static void shutdownDatasourceManager() throws Exception {
+        DatabaseHelper.shutdownConnPool();
     }
 }

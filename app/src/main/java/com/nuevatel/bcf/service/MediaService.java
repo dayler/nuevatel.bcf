@@ -11,9 +11,14 @@ import com.nuevatel.cf.appconn.Type;
  * @author Ariel Salazar
  */
 public interface MediaService {
+
     void start();
+
     void shutdown();
+
     void schedule(Integer nodeId, Id id, Type type, Action action, SessionArg args, Integer mediaArg2);
-    void invalidate(String id);
+
+    MediaDispatcher invalidate(String id);
+
     void invalidateAll();
 }

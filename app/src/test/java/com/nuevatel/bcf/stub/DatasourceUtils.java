@@ -1,8 +1,8 @@
 package com.nuevatel.bcf.stub;
 
+import com.nuevatel.bcf.core.dao.DatabaseHelper;
 import com.nuevatel.common.ds.DataSourceManager;
 import com.nuevatel.common.ds.DataSourceManagerConfigurator;
-import com.nuevatel.common.ds.DataSourceManagerImpl;
 import com.nuevatel.common.ds.JDBCProperties;
 import com.nuevatel.common.exception.InvalidPropertyValueException;
 import com.nuevatel.common.util.CSVUtil;
@@ -48,17 +48,8 @@ public final class DatasourceUtils {
 
     public static DataSourceManager getTestConnection(Properties prop) throws InvalidPropertyValueException, SQLException, ClassNotFoundException {
         JDBCProperties jdbcProps = new JDBCProperties(prop);
-        DataSourceManagerConfigurator configurator = new DataSourceManagerConfigurator();
-        configurator.configure()
-                .setJdbcDriver(jdbcProps.getDriver())
-                .setJdbcUrl(jdbcProps.getUrl())
-                .setJdbcUser(jdbcProps.getUser())
-                .setJdbcPassword(jdbcProps.getPassword())
-                .setMinConnPerPatition(jdbcProps.getMinConnPerPartition())
-                .setMaxConnPerPatition(jdbcProps.getMaxConnPerPartition())
-                .setPartitionCount(jdbcProps.getPartitionCount())
-                .build();
-        return new DataSourceManagerImpl();
+        DatabaseHelper.configure(jdbcProps, jdbcProps);
+        return DatabaseHelper.getBcfDatasource();
     }
 
     private static void populateUnitTestData(DataSourceManager ds) throws SQLException, IOException {

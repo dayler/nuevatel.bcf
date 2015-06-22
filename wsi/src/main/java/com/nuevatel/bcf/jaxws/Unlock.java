@@ -7,13 +7,13 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = "lock", namespace = "http://bcf.nuevatel.com/")
+@XmlRootElement(name = "unlock", namespace = "http://bcf.nuevatel.com/")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "lock", namespace = "http://bcf.nuevatel.com/", propOrder = {
+@XmlType(name = "unlock", namespace = "http://bcf.nuevatel.com/", propOrder = {
     "name",
     "regexId"
 })
-public class Lock {
+public class Unlock {
 
     @XmlElement(name = "name", namespace = "")
     private String name;

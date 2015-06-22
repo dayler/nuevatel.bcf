@@ -9,7 +9,10 @@ import java.util.Date;
  */
 public class SessionRecord {
 
-    private String id;
+    /**
+     * NUll to indicate new register to insert.
+     */
+    private String id = null;
 
     private String name;
 
@@ -26,6 +29,8 @@ public class SessionRecord {
     private Date endTimestamp = null;
 
     private Integer respCode = null;
+
+    private Flag flag = Flag.none;
 
     public String getId() {
         return id;
@@ -97,5 +102,21 @@ public class SessionRecord {
 
     public Integer getRespCode() {
         return respCode;
+    }
+
+    public void setFlag(Flag flag) {
+        this.flag = flag;
+    }
+
+    public Flag getFlag() {
+        return flag;
+    }
+
+    public enum Flag {
+        insert,
+        update,
+        updateEndTimestamp,
+        none,
+        ;
     }
 }

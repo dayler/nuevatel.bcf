@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" targetNamespace="http://bcf.nuevatel.com/" xmlns:tns="http://bcf.nuevatel.com/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="lock" type="tns:lock"/>
+
+  <xs:element name="lockResponse" type="tns:lockResponse"/>
+
+  <xs:element name="unlock" type="tns:unlock"/>
+
+  <xs:element name="unlockResponse" type="tns:unlockResponse"/>
+
+  <xs:complexType name="unlock">
+    <xs:sequence>
+      <xs:element name="name" type="xs:string" minOccurs="0"/>
+      <xs:element name="regexId" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="unlockResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="lock">
+    <xs:sequence>
+      <xs:element name="name" type="xs:string" minOccurs="0"/>
+      <xs:element name="regexId" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="lockResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

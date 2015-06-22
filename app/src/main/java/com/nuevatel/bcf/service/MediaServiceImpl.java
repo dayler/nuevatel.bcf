@@ -69,15 +69,22 @@ class MediaServiceImpl implements MediaService {
         dispatcher.setSchFuture(schFuture);
         // Register task
         dispatcherMap.put(id.getId0(), dispatcher);
+        /*
+        Entry entry=new Entry(id, type, action, sessionArg, fromAppId, toAppId);
+        Entry tmpEntry=idEntryMap.put(id.getId0(), entry);
+        if(tmpEntry!=null && tmpEntry.getRSF()!=null) executor.remove(tmpEntry.getRSF());
+        entry.setRSF((RunnableScheduledFuture<?>)executor.schedule(entry, mediaArg2 * 100, TimeUnit.MILLISECONDS));
+         */
     }
 
     @Override
-    public void invalidate(String id) {
+    public MediaDispatcher invalidate(String id) {
         MediaDispatcher d = dispatcherMap.remove(id);
         if (d != null) {
             // false to allowed to complete if the task is running.
             d.getSchFuture().cancel(false);
         }
+        return d;
     }
 
     @Override

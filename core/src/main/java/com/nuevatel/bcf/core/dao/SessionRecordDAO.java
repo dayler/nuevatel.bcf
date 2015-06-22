@@ -4,7 +4,6 @@ import com.nuevatel.bcf.core.domain.SessionRecord;
 import com.nuevatel.bcf.core.entity.ESessionRecord;
 import com.nuevatel.bcf.core.entity.SQLQuery;
 import com.nuevatel.common.ds.DataSourceManager;
-import com.nuevatel.common.ds.DataSourceManagerImpl;
 import com.nuevatel.common.util.StringUtils;
 
 import java.sql.CallableStatement;
@@ -20,7 +19,7 @@ import static com.nuevatel.common.util.Util.*;
  */
 public class SessionRecordDAO implements DAO<String, SessionRecord> {
 
-    private DataSourceManager ds = new DataSourceManagerImpl();
+    private DataSourceManager ds = DatabaseHelper.getRecordDatasource();
 
     @Override
     public void insert(SessionRecord record) throws SQLException {

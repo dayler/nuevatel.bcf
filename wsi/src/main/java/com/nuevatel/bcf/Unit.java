@@ -5,7 +5,10 @@
  */
 package com.nuevatel.bcf;
 
+import com.nuevatel.common.util.StringUtils;
+import com.nuevatel.common.util.IntegerUtil;
 import javax.jws.WebMethod;
+import javax.jws.WebParam;
 import javax.jws.WebService;
 
 /**
@@ -16,12 +19,29 @@ import javax.jws.WebService;
 public class Unit {
     
     @WebMethod
-    public String lock(String unit, int regexId) {
-        return "ok";
+    public String lock( @WebParam (name = "name") String unit,
+                        @WebParam (name = "regexId")  String regexId) {
+        
+        Integer intRegexId = IntegerUtil.tryParse(regexId);
+        
+        if( intRegexId == null
+            || StringUtils.isEmptyOrNull(unit)
+            || IntegerUtil.tryParse(unit) == null) {
+            return "FAILED";
+        }
+        return "OK";
     }
     
-//    @WebMethod
-//    public String unlock(String unit, int regexId) {
-//        return "ok";
-//    }
+    @WebMethod
+    public String unlock(   @WebParam (name = "name") String unit,
+                            @WebParam (name = "regexId") String regexId) {
+        Integer intRegexId = IntegerUtil.tryParse(regexId);
+        
+        if( intRegexId == null
+            || StringUtils.isEmptyOrNull(unit)
+            || IntegerUtil.tryParse(unit) == null) {
+            return "FAILED";
+        }
+        return "OK";
+    }
 }

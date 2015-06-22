@@ -1,10 +1,13 @@
 package com.nuevatel.bcf.service;
 
-import com.nuevatel.base.appconn.Message;
+import com.nuevatel.base.appconn.AppMessages;
 import com.nuevatel.cf.appconn.Action;
+import com.nuevatel.cf.appconn.CFIE;
+import com.nuevatel.cf.appconn.EventReportCall;
 import com.nuevatel.cf.appconn.Id;
 import com.nuevatel.cf.appconn.SessionArg;
 import com.nuevatel.cf.appconn.SetSessionCall;
+import com.nuevatel.cf.appconn.SetSessionRet;
 import com.nuevatel.cf.appconn.Type;
 import com.nuevatel.common.util.Parameters;
 import org.apache.logging.log4j.LogManager;
@@ -41,11 +44,11 @@ class MediaDispatcher implements Runnable {
 
     private ScheduledFuture<?>schFuture;
 
-    private AppServerFactory bcfServerFactory = new AppServerFactory();
+    private AppServerFactory appServerFactory = new AppServerFactory();
 
-    private Runnable callBack;
+    private Runnable onPreExecute;
 
-    public MediaDispatcher(Integer nodeId, Id id, Type type, Action action, SessionArg args, Runnable callBack) {
+    public MediaDispatcher(Integer nodeId, Id id, Type type, Action action, SessionArg args, Runnable onPreExecute) {
         Parameters.checkNull(nodeId, "nodeId");
         Parameters.checkNull(id, "id");
         Parameters.checkNull(type, "type");
@@ -56,28 +59,42 @@ class MediaDispatcher implements Runnable {
         this.type = type;
         this.action = action;
         this.args = args;
-        this.callBack = callBack;
+        this.onPreExecute = onPreExecute;
     }
 
     @Override
     public void run() {
+        if (onPreExecute != null) {
+             // Execute callback
+            onPreExecute.run();
+        }
+        // Set Session call
+        SetSessionCall sessionCall = new SetSessionCall(id,
+                                                        type,
+                                                        new Action(Action.MEDIA_ACTION.END_MEDIA, action.getSessionAction()),
+                                                        args);
+        SetSessionRet setSessionRet = null;
         try {
-            if (callBack != null) {
-                // Execute callback
-                callBack.run();
-            }
-            // Session call
-            SetSessionCall sessionCall = new SetSessionCall(id, type, action, args);
-            Message newSessionRet = bcfServerFactory.get().dispatch(nodeId, sessionCall.toMessage());
-            if (newSessionRet == null) {
-                logger.warn("Failed to dispatch Media Message through appconnServer. nodeId:%s id:%s type:%s action:%s args:%s",
-                        nodeId, id, type, action, args);
-            }
+            setSessionRet = new SetSessionRet(appServerFactory.get().dispatch(nodeId, sessionCall.toMessage()));
         } catch (Exception ex) {
-            logger.warn("Failed to dispatch Media Message through appconnServer. nodeId:%s id:%s type:%s action:%s args:%s",
-                    nodeId, id, type, action, args, ex);
+            logger.warn("Failed to dispatch Media Message through appconnServer. remoteId:{} id:{} type:{} action:{} args:{}",
+                        nodeId, id, type, action, args, ex);
         }
 
+        // Be sure to send terminations task.
+        if ((setSessionRet == null || setSessionRet.getRet() == AppMessages.FAILED)
+             && action.getSessionAction() != Action.SESSION_ACTION.END) {
+            // Event report call
+            EventReportCall eventReportCall = new EventReportCall(id, type, CFIE.EVENT_TYPE.SET_SESSION_FAILED.getType(), null);
+            try {
+                appServerFactory.get().dispatch(nodeId, eventReportCall.toMessage());
+                // TODO Ask about that
+                // GatewayApp.getGatewayApp().getProxyApp(toAppId).getAppClient().dispatch(eventReportCall.toMessage());
+            } catch (Exception ex) {
+                logger.warn("Failed to dispatch Media Message through appconnServer. remoteId:{} id:{} type:{} action:{} args:{}",
+                            nodeId, id, type, action, args, ex);
+            }
+        }
     }
 
     public void setSchFuture(ScheduledFuture<?> schFuture) {

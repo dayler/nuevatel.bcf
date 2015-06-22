@@ -1,12 +1,12 @@
 package com.nuevatel.bcf.service;
 
 import com.google.common.cache.CacheLoader;
+import com.nuevatel.bcf.core.dao.DatabaseHelper;
 import com.nuevatel.bcf.domain.Unit;
 import com.nuevatel.bcf.core.entity.SQLQuery;
 import com.nuevatel.bcf.core.entity.EUnit;
 import com.nuevatel.bcf.exception.UnitNotFoundException;
 import com.nuevatel.common.ds.DataSourceManager;
-import com.nuevatel.common.ds.DataSourceManagerImpl;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -28,7 +28,7 @@ public class UnitCacheLoader extends CacheLoader<String, Unit> {
      */
     @Override
     public Unit load(String name) throws Exception {
-        DataSourceManager ds = new DataSourceManagerImpl();
+        DataSourceManager ds = DatabaseHelper.getBcfDatasource();
         Connection conn = null;
         CallableStatement stm = null;
         ResultSet rs = null;

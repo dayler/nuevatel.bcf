@@ -1,5 +1,7 @@
 package com.nuevatel.bcf;
 
+import com.nuevatel.common.ds.JDBCProperties;
+import com.nuevatel.common.exception.InvalidPropertyValueException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,10 +23,12 @@ public class BCF {
 
     public static void main(String[] args) {
         try {
-            properties = loadProperties(args);
+            properties = loadBcfProperties(args);
+            JDBCProperties jdbcBcfProp = loadJdbcBcfProperties(args);
+            JDBCProperties jdbcRecordProp = loadJdbcRecordProperties(args);
             // wait 1 minute to finish all process, 1 thread to do.
             ShutdownHook hook = new ShutdownHook(60, 1);
-            BCFProcessor bcfProcessor = new BCFProcessor(properties);
+            BCFProcessor bcfProcessor = new BCFProcessor(properties, jdbcBcfProp, jdbcRecordProp);
             hook.appendProcess(bcfProcessor);
 
             // Start BCF Processor.
@@ -42,7 +46,49 @@ public class BCF {
         return properties;
     }
 
-    private static Properties loadProperties(String[] args) throws IOException {
+    private static JDBCProperties loadJdbcBcfProperties(String[] args) throws IOException, InvalidPropertyValueException {
+        InputStream is = null;
+        try {
+            if (args.length < 2) {
+                // Load default properties
+                is = BCF.class.getResourceAsStream("/jdbc.bcf.properties");
+            } else {
+                String propPath = args[1];
+                is = new FileInputStream(propPath);
+            }
+
+            Properties prop = new Properties();
+            prop.load(is);
+            return  new JDBCProperties(prop);
+        } finally {
+            if (is != null) {
+                is.close();
+            }
+        }
+    }
+
+    private static JDBCProperties loadJdbcRecordProperties(String[] args) throws IOException, InvalidPropertyValueException {
+        InputStream is = null;
+        try {
+            if (args.length < 2) {
+                // Load default properties
+                is = BCF.class.getResourceAsStream("/jdbc.bcf.properties");
+            } else {
+                String propPath = args[1];
+                is = new FileInputStream(propPath);
+            }
+
+            Properties prop = new Properties();
+            prop.load(is);
+            return  new JDBCProperties(prop);
+        } finally {
+            if (is != null) {
+                is.close();
+            }
+        }
+    }
+
+    private static Properties loadBcfProperties(String[] args) throws IOException {
         InputStream is = null;
         try {
             if (args.length == 0) {

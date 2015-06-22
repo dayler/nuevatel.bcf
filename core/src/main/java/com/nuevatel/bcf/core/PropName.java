@@ -17,6 +17,8 @@ public enum PropName {
 
     bcf_service_media_size("bcf.service.media.size"),
 
+    bcf_logrecorder_size("bcf.logrecorder.size"),
+
     /**
      * Property cache.service.concurrencyLevel
      */

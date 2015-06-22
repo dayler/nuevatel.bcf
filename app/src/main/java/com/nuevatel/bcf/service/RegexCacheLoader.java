@@ -1,6 +1,7 @@
 package com.nuevatel.bcf.service;
 
 import com.google.common.cache.CacheLoader;
+import com.nuevatel.bcf.core.dao.DatabaseHelper;
 import com.nuevatel.bcf.domain.Media;
 import com.nuevatel.bcf.domain.Regex;
 import com.nuevatel.bcf.domain.Swap;
@@ -9,7 +10,6 @@ import com.nuevatel.bcf.core.entity.SQLQuery;
 import com.nuevatel.bcf.exception.RegexNotFoundException;
 import com.nuevatel.cf.appconn.Name;
 import com.nuevatel.common.ds.DataSourceManager;
-import com.nuevatel.common.ds.DataSourceManagerImpl;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
@@ -40,7 +40,7 @@ public class RegexCacheLoader extends CacheLoader<Integer, Regex> {
             return  null;
         }
 
-        DataSourceManager ds = new DataSourceManagerImpl();
+        DataSourceManager ds = DatabaseHelper.getBcfDatasource();
         Connection conn = null;
         CallableStatement stm = null;
         ResultSet rs = null;
