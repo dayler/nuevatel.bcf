@@ -7,10 +7,10 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = "unlockResponse", namespace = "http://wsi.bcf.nuevatel.com/")
+@XmlRootElement(name = "dummyResponse", namespace = "http://wsi.bcf.nuevatel.com/")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "unlockResponse", namespace = "http://wsi.bcf.nuevatel.com/")
-public class UnlockResponse {
+@XmlType(name = "dummyResponse", namespace = "http://wsi.bcf.nuevatel.com/")
+public class DummyResponse {
 
     @XmlElement(name = "return", namespace = "")
     private String _return;

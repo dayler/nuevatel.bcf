@@ -25,4 +25,10 @@ public interface DAO <K, T> {
      * @param record Record to update in the database.
      */
     void update(T record) throws SQLException;
+    
+    /**
+     * 
+     * @param key primary key, used to find the record an delete it  
+     */
+    void delete(K key)throws SQLException;
 }

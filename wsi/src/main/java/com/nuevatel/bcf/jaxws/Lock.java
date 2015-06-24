@@ -1,5 +1,5 @@
 
-package com.nuevatel.bcf.jaxws;
+package com.nuevatel.bcf.wsi.jaxws;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -7,9 +7,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = "lock", namespace = "http://bcf.nuevatel.com/")
+@XmlRootElement(name = "lock", namespace = "http://wsi.bcf.nuevatel.com/")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "lock", namespace = "http://bcf.nuevatel.com/", propOrder = {
+@XmlType(name = "lock", namespace = "http://wsi.bcf.nuevatel.com/", propOrder = {
     "name",
     "regexId"
 })

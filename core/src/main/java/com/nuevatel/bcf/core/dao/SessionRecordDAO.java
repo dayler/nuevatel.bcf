@@ -8,11 +8,11 @@ import com.nuevatel.common.util.StringUtils;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
 import static com.nuevatel.common.util.Util.*;
+import java.sql.ResultSet;
 
 /**
  * Created by asalazar on 6/17/15.
@@ -143,5 +143,10 @@ public class SessionRecordDAO implements DAO<String, SessionRecord> {
                 stm.close();
             }
         }
+    }
+
+    @Override
+    public void delete(String key) throws SQLException {
+    //logs --> warning
     }
 }

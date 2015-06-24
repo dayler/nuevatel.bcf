@@ -23,21 +23,28 @@ class MediaServiceImpl implements MediaService {
 
     private static Logger logger = LogManager.getLogger(MediaServiceImpl.class);
 
+    private static final int INITIAL_CAPACITY = 8192;
+
+    private static final float LOAD_FACTOR = 0.75f;
+
+    private static final int CONCURRENCY_LEVEL = 256;
+
     /**
      * Map for dispatchers.
      */
-    private Map<String, MediaDispatcher> dispatcherMap = new ConcurrentHashMap<>();
+    private Map<String, MediaDispatcher> dispatcherMap = null;
 
-    private ScheduledExecutorService service;
+    private ScheduledExecutorService service = null;
 
     private int threadPoolSize = 16;
 
     public MediaServiceImpl() {
-        // No op
+        dispatcherMap = new ConcurrentHashMap<>(INITIAL_CAPACITY, LOAD_FACTOR, CONCURRENCY_LEVEL);
     }
 
     public MediaServiceImpl(int threadPoolSize) {
         this.threadPoolSize = threadPoolSize;
+        dispatcherMap = new ConcurrentHashMap<>(INITIAL_CAPACITY, LOAD_FACTOR, CONCURRENCY_LEVEL);
     }
 
     @Override
@@ -64,17 +71,19 @@ class MediaServiceImpl implements MediaService {
     @Override
     public void schedule(Integer nodeId, Id id, Type type, Action action, SessionArg args, Integer mediaArg2) {
         // Callback remove dispatcher from the dispatcherMap
-        MediaDispatcher dispatcher = new MediaDispatcher(nodeId, id, type, action, args, /* callback */()->dispatcherMap.remove(id.getId0()));
+        MediaDispatcher dispatcher = new MediaDispatcher(nodeId, // Remote Id
+                                                         id,
+                                                         type,
+                                                         action,
+                                                         args,
+                                                         ()->dispatcherMap.remove(id.getId0())); // callback -> Removes from dispatcherMap
         ScheduledFuture<?>schFuture = service.schedule(dispatcher, mediaArg2 * 100, TimeUnit.MILLISECONDS);
         dispatcher.setSchFuture(schFuture);
         // Register task
-        dispatcherMap.put(id.getId0(), dispatcher);
-        /*
-        Entry entry=new Entry(id, type, action, sessionArg, fromAppId, toAppId);
-        Entry tmpEntry=idEntryMap.put(id.getId0(), entry);
-        if(tmpEntry!=null && tmpEntry.getRSF()!=null) executor.remove(tmpEntry.getRSF());
-        entry.setRSF((RunnableScheduledFuture<?>)executor.schedule(entry, mediaArg2 * 100, TimeUnit.MILLISECONDS));
-         */
+        MediaDispatcher oddDispatcher = dispatcherMap.put(id.getId0(), dispatcher);
+        if (oddDispatcher != null && oddDispatcher.getSchFuture() != null) {
+            oddDispatcher.getSchFuture().cancel(false);
+        }
     }
 
     @Override

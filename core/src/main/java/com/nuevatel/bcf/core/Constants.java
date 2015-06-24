@@ -13,4 +13,8 @@ public final class Constants {
     private Constants() {
         // No op. Used to prevent instantiation.
     }
+    
+    public final static String LOCK_NAME = "lock";
+    
+    public final static String UNLOCK_NAME = "unlock";
 }

@@ -22,7 +22,7 @@ import java.util.concurrent.ScheduledFuture;
  *
  * @author Ariel Salazar
  */
-class MediaDispatcher implements Runnable {
+public class MediaDispatcher implements Runnable {
 
     private static Logger logger = LogManager.getLogger(MediaDispatcher.class);
 
@@ -53,8 +53,8 @@ class MediaDispatcher implements Runnable {
         Parameters.checkNull(id, "id");
         Parameters.checkNull(type, "type");
         Parameters.checkNull(action, "action");
-        Parameters.checkNull(args, "args");
 
+        this.nodeId = nodeId;
         this.id = id;
         this.type = type;
         this.action = action;
@@ -69,21 +69,24 @@ class MediaDispatcher implements Runnable {
             onPreExecute.run();
         }
         // Set Session call
+        Action tmpAction = new Action(Action.MEDIA_ACTION.END_MEDIA, this.action.getSessionAction());
         SetSessionCall sessionCall = new SetSessionCall(id,
                                                         type,
-                                                        new Action(Action.MEDIA_ACTION.END_MEDIA, action.getSessionAction()),
+                                                        tmpAction,
                                                         args);
         SetSessionRet setSessionRet = null;
         try {
             setSessionRet = new SetSessionRet(appServerFactory.get().dispatch(nodeId, sessionCall.toMessage()));
+            logger.debug("dispatch SetSessionRet nodeId:{} id0:{} id1:{} type:{} Action:{} SessionArgs{}",
+                         nodeId, id.getId0(), id.getId1(), type, toStringAction(tmpAction), toStringSessionArgs(args));
         } catch (Exception ex) {
             logger.warn("Failed to dispatch Media Message through appconnServer. remoteId:{} id:{} type:{} action:{} args:{}",
-                        nodeId, id, type, action, args, ex);
+                        nodeId, id, type, this.action, args, ex);
         }
 
         // Be sure to send terminations task.
         if ((setSessionRet == null || setSessionRet.getRet() == AppMessages.FAILED)
-             && action.getSessionAction() != Action.SESSION_ACTION.END) {
+             && this.action.getSessionAction() != Action.SESSION_ACTION.END) {
             // Event report call
             EventReportCall eventReportCall = new EventReportCall(id, type, CFIE.EVENT_TYPE.SET_SESSION_FAILED.getType(), null);
             try {
@@ -92,9 +95,26 @@ class MediaDispatcher implements Runnable {
                 // GatewayApp.getGatewayApp().getProxyApp(toAppId).getAppClient().dispatch(eventReportCall.toMessage());
             } catch (Exception ex) {
                 logger.warn("Failed to dispatch Media Message through appconnServer. remoteId:{} id:{} type:{} action:{} args:{}",
-                            nodeId, id, type, action, args, ex);
+                            nodeId, id, type, this.action, args, ex);
             }
         }
+    }
+
+    private String toStringAction(Action action) {
+        return String.format("Action[MEDIA_ACTION:%s SESSION_ACTION:%s]", action.getMediaAction(), action.getSessionAction());
+    }
+
+    private String toStringSessionArgs(SessionArg args) {
+        if (args == null) {
+            return "";
+        }
+        return String.format("SessionArgs[fromName:%s toName:%s apn:%s qos:%s uei:%s ref:%s]",
+                             args.getFromName(),
+                             args.getToName(),
+                             args.getAPN(),
+                             args.getQOS(),
+                             args.getUEI(),
+                             args.getReference());
     }
 
     public void setSchFuture(ScheduledFuture<?> schFuture) {
@@ -103,5 +123,9 @@ class MediaDispatcher implements Runnable {
 
     public ScheduledFuture<?> getSchFuture() {
         return schFuture;
+    }
+
+    public Action getAction() {
+        return action;
     }
 }

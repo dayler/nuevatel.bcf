@@ -7,7 +7,7 @@ import java.util.Date;
  *
  * @author Ariel Salazar
  */
-public class SessionRecord {
+public class SessionRecord implements Record {
 
     /**
      * NUll to indicate new register to insert.

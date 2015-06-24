@@ -1,5 +1,5 @@
 
-package com.nuevatel.bcf.jaxws;
+package com.nuevatel.bcf.wsi.jaxws;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -7,9 +7,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = "lockResponse", namespace = "http://bcf.nuevatel.com/")
+@XmlRootElement(name = "lockResponse", namespace = "http://wsi.bcf.nuevatel.com/")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "lockResponse", namespace = "http://bcf.nuevatel.com/")
+@XmlType(name = "lockResponse", namespace = "http://wsi.bcf.nuevatel.com/")
 public class LockResponse {
 
     @XmlElement(name = "return", namespace = "")

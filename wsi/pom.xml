@@ -9,7 +9,7 @@
         <version>1.0</version>
     </parent>
     <artifactId>wsi</artifactId>
-    <name>BCF WSI</name>
+    <name>Web Service Interface</name>
     <version>1.0</version>
     
     <build>

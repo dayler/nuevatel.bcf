@@ -1,6 +1,8 @@
 package com.nuevatel.bcf.service;
 
+import com.nuevatel.bcf.core.domain.Record;
 import com.nuevatel.bcf.core.domain.SessionRecord;
+import com.nuevatel.bcf.core.domain.WSIRecord;
 
 /**
  * Schedule to store in the database all transactions. Use schema <b>bcf_record</b>.
@@ -12,9 +14,9 @@ public interface LogRecorderService {
     /**
      * Schedule SessionRecord to insert in the database.
      *
-     * @param sr ecord to schedule.
+     * @param record Record to schedule.
      */
-    void appendSessionRecord(SessionRecord sr);
+    void appendRecord(Record record);
 
     /**
      * Initialize the job.

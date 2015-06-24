@@ -8,6 +8,7 @@ import com.nuevatel.bcf.domain.Media;
 import com.nuevatel.bcf.domain.Regex;
 import com.nuevatel.bcf.domain.Swap;
 import com.nuevatel.bcf.domain.Unit;
+import com.nuevatel.bcf.service.MediaServiceFactory;
 import com.nuevatel.bcf.service.RegexServiceFactory;
 import com.nuevatel.bcf.service.UnitServiceFactory;
 import com.nuevatel.cf.appconn.Action;
@@ -41,6 +42,8 @@ public class NewSessionTask implements Task {
 
     private RegexServiceFactory regexServiceFactory = new RegexServiceFactory();
 
+    private MediaServiceFactory mediaServiceFactory = new MediaServiceFactory();
+
     /**
      * {@inheritDoc}
      */
@@ -58,19 +61,19 @@ public class NewSessionTask implements Task {
                 Name tmpName =  newSessionCall.getName();
                 // Name
                 Name name = NameGetterProvider.get().getSessionName(tmpType, tmpName);
-                SessionArg sessionArgs = newSessionCall.getSessionArg();
+                SessionArg tmpSessionArgs = newSessionCall.getSessionArg();
                 // from session name
-                Name fromName = sessionArgs.getFromName();
+                Name fromName = tmpSessionArgs.getFromName();
                 // to session name
-                Name toName = sessionArgs.getToName();
+                Name toName = tmpSessionArgs.getToName();
                 // get session args
                 // TODO Check if is needed get new instance
-//                SessionArg sessionArgs = new SessionArg(fromName,
-//                                                       toName,
-//                                                       null,
-//                                                       null,
-//                                                       null,
-//                                                       tmpSessionArg.getReference());
+                SessionArg sessionArgs = new SessionArg(fromName,
+                                                        toName,
+                                                        null,
+                                                        null,
+                                                        null,
+                                                        tmpSessionArgs.getReference());
                 if (logger.isDebugEnabled() || logger.isTraceEnabled()) {
                     logger.debug("Name:{} fromName:{} toName:{}", name, fromName, toName);
                 }
@@ -100,24 +103,23 @@ public class NewSessionTask implements Task {
                                 Media newMedia = regex.getNewMedia();
                                 Media endMedia = regex.getEndMedia();
                                 Swap swap = regex.getSwap();
-                                SessionArg tmpSwapSessionArg = null;
                                 Action.MEDIA_ACTION mediaAction = null;
                                 Action.SESSION_ACTION sessionAction = null;
 
+                                // For swap operation.
                                 if (swap != null) {
                                     logger.info("Execute Id:{} swap:{}", id.getId0(), swap.getName());
-                                    tmpSwapSessionArg = new SessionArg(null, swap.getName(), null, null, null, null);
+                                    sessionArgs = new SessionArg(null, swap.getName(), null, null, null, null);
                                     sessionAction = Action.SESSION_ACTION.MODIFY;
                                 }
 
                                 MediaArg mediaArgs = null;
 
-                                // End session in any case.
-                                // if new media
+                                // end media
                                 if (newMedia != null) {
                                     logger.info("Execute Id:{} newMedia:{}", id.getId0(), newMedia.getName());
-                                    sessionAction = ifNull(sessionAction, Action.SESSION_ACTION.END);
-                                    mediaAction = Action.MEDIA_ACTION.NEW_MEDIA;
+                                    sessionAction = ifNull(sessionAction, Action.SESSION_ACTION.ACCEPT);
+                                    mediaAction = Action.MEDIA_ACTION.NEW_MEDIA; // to initialize media op
                                     mediaArgs = new MediaArg(newMedia.getName().getName(),
                                             newMedia.getName().getType(),
                                             newMedia.getValue());
@@ -125,17 +127,29 @@ public class NewSessionTask implements Task {
 
                                 // if end media
                                 if (endMedia != null) {
-                                    logger.info("Execute Id:{} endMedia:{}", id.getId0(), endMedia.getName());
-                                    mediaAction = ifNull(mediaAction, Action.MEDIA_ACTION.END_MEDIA);
-                                    sessionAction = ifNull(sessionAction, Action.SESSION_ACTION.END);
-                                    mediaArgs = new MediaArg(endMedia.getName().getName(),
-                                            endMedia.getName().getType(),
-                                            endMedia.getValue());
+//                                    logger.info("Execute Id:{} endMedia:{}", id.getId0(), endMedia.getName());
+//                                    mediaAction = ifNull(mediaAction, Action.MEDIA_ACTION.END_MEDIA);
+//                                    sessionAction = ifNull(sessionAction, Action.SESSION_ACTION.END);
+//                                    mediaArgs = new MediaArg(endMedia.getName().getName(),
+//                                            endMedia.getName().getType(),
+//                                            endMedia.getValue());
+                                }
+
+                                Action tmpAction = new Action(mediaAction, sessionAction);
+                                // Media service
+                                if (mediaArgs != null && mediaArgs.getMediaArg2() != null) {
+                                    mediaServiceFactory.get().schedule(conn.getRemoteId(),
+                                                                       id,
+                                                                       tmpType,
+                                                                       tmpAction,
+                                                                       sessionArgs,
+                                                                       mediaArgs.getMediaArg2()
+                                                                       );
                                 }
 
                                 // dispatch message
-                                NewSessionRet newSessionRet = new NewSessionRet(new Action(mediaAction, sessionAction), // Action (Session|Media)
-                                        ifNull(tmpSwapSessionArg, sessionArgs), // Session args
+                                NewSessionRet newSessionRet = new NewSessionRet(tmpAction, // Action (Session|Media)
+                                        sessionArgs, // Session args
                                         null, // Watch args
                                         mediaArgs // null media args
                                 );
