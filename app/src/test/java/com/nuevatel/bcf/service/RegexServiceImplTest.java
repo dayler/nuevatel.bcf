@@ -1,10 +1,10 @@
 package com.nuevatel.bcf.service;
 
 import com.google.common.cache.LoadingCache;
-import com.nuevatel.bcf.domain.Media;
-import com.nuevatel.bcf.domain.Regex;
-import com.nuevatel.bcf.domain.Swap;
-import com.nuevatel.bcf.exception.RegexNotFoundException;
+import com.nuevatel.bcf.core.domain.Media;
+import com.nuevatel.bcf.core.domain.Regex;
+import com.nuevatel.bcf.core.domain.Swap;
+import com.nuevatel.bcf.core.exception.RegexNotFoundException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +13,6 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.regex.Pattern;
 
-import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
@@ -36,9 +35,6 @@ public class RegexServiceImplTest {
     private Media newMedia;
 
     @Mock
-    private Media endMedia;
-
-    @Mock
     private Swap swap;
 
     @Mock
@@ -48,7 +44,7 @@ public class RegexServiceImplTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         pattern = Pattern.compile("[1-9]");
-        Regex testRegex = new Regex(TEST_REGEX_ID, TEST_REGEX_NAME, pattern, newMedia, endMedia, swap);
+        Regex testRegex = new Regex(TEST_REGEX_ID, TEST_REGEX_NAME, pattern, newMedia, swap);
         when(cacheLoader.load(TEST_REGEX_ID)).thenReturn(testRegex);
         when(cacheLoader.load(TEST_UNEXISTED_REGEX_ID)).thenThrow(RegexNotFoundException.class);
         RegexServiceFactory sFactory = new RegexServiceFactory(null);
@@ -72,7 +68,6 @@ public class RegexServiceImplTest {
         assertEquals("Not match regex id", TEST_REGEX_ID, testRegex.getId().intValue());
         assertEquals("Not match regex name", TEST_REGEX_NAME, testRegex.getName());
         assertEquals("Not match new Media", newMedia, testRegex.getNewMedia());
-        assertEquals("Not match end Media", endMedia, testRegex.getEndMedia());
         assertEquals("Not match Swap", swap, testRegex.getSwap());
         // Verify
         verify(cacheLoader, times(1)).load(TEST_REGEX_ID);

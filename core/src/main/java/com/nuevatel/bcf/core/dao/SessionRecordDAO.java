@@ -1,6 +1,7 @@
 package com.nuevatel.bcf.core.dao;
 
 import com.nuevatel.bcf.core.domain.SessionRecord;
+import com.nuevatel.bcf.core.domain.Unit;
 import com.nuevatel.bcf.core.entity.ESessionRecord;
 import com.nuevatel.bcf.core.entity.SQLQuery;
 import com.nuevatel.common.ds.DataSourceManager;
@@ -146,7 +147,7 @@ public class SessionRecordDAO implements DAO<String, SessionRecord> {
     }
 
     @Override
-    public void delete(String key) throws SQLException {
-    //logs --> warning
+    public void deleteByPK(String key) throws SQLException {
+        //logs --> warning
     }
 }

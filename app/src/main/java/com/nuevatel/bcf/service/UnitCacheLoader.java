@@ -1,17 +1,10 @@
 package com.nuevatel.bcf.service;
 
 import com.google.common.cache.CacheLoader;
-import com.nuevatel.bcf.core.dao.DatabaseHelper;
-import com.nuevatel.bcf.domain.Unit;
-import com.nuevatel.bcf.core.entity.SQLQuery;
-import com.nuevatel.bcf.core.entity.EUnit;
-import com.nuevatel.bcf.exception.UnitNotFoundException;
-import com.nuevatel.common.ds.DataSourceManager;
-
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.util.Date;
+import com.nuevatel.bcf.core.dao.UnitDAO;
+import com.nuevatel.bcf.core.domain.Unit;
+import com.nuevatel.bcf.core.exception.UnitNotFoundException;
+import com.nuevatel.common.util.StringUtils;
 
 /**
  * Load single unit from the database based on its name.
@@ -21,6 +14,11 @@ import java.util.Date;
 public class UnitCacheLoader extends CacheLoader<String, Unit> {
 
     /**
+     * Data access object for Unit.
+     */
+    private UnitDAO unitDAO = new UnitDAO();
+
+    /**
      *
      * @param name Unit name.
      * @return Return the unit to corresponds with the provided name.
@@ -28,46 +26,15 @@ public class UnitCacheLoader extends CacheLoader<String, Unit> {
      */
     @Override
     public Unit load(String name) throws Exception {
-        DataSourceManager ds = DatabaseHelper.getBcfDatasource();
-        Connection conn = null;
-        CallableStatement stm = null;
-        ResultSet rs = null;
-
-        try {
-            Unit unit = null;
-            conn = ds.getConnection();
-            stm = ds.makeStatement(conn, SQLQuery.select_unit_by_name.query(), name);
-            rs = stm.executeQuery();
-            while (rs.next()) {
-                if (unit == null) {
-                    unit = new Unit(name);
-                }
-
-                int regexId = rs.getInt(EUnit.regex_id.name());
-                Date startTimestamp = rs.getDate(EUnit.start_timestamp.name());
-                Date endTimestamp = rs.getDate(EUnit.end_timestamp.name());
-                unit.addRegexId(regexId);
-                unit.addTimespan(regexId, startTimestamp, endTimestamp);
-            }
-
-            // If unit is null throws exception.
-            if (unit == null) {
-                throw new UnitNotFoundException(name);
-            }
-
-            return unit;
-        } finally {
-            if (conn != null) {
-                conn.close();
-            }
-
-            if (rs != null) {
-                rs.close();
-            }
-
-            if (stm != null) {
-                stm.close();
-            }
+        if (StringUtils.isBlank(name)) {
+            throw new UnitNotFoundException("Empty String or null");
         }
+
+        Unit unit;
+        if ((unit = unitDAO.findById(name)) == null) {
+            throw new UnitNotFoundException(name);
+        }
+
+        return unit;
     }
 }

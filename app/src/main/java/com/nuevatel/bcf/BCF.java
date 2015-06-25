@@ -72,7 +72,7 @@ public class BCF {
         try {
             if (args.length < 2) {
                 // Load default properties
-                is = BCF.class.getResourceAsStream("/jdbc.bcf.properties");
+                is = BCF.class.getResourceAsStream("/jdbc.bcf_record.properties");
             } else {
                 String propPath = args[1];
                 is = new FileInputStream(propPath);

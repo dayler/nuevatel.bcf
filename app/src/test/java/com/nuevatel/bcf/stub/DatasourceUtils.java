@@ -30,8 +30,8 @@ public final class DatasourceUtils {
 
     private final static String SQL_INSERT_UNIT = "INSERT INTO unit (name, regex_id, creation_timestamp, start_timestamp, end_timestamp)\n" +
                                                   "VALUES (?, ?, ?, ?, ?)";
-    private final static String SQL_INSERT_REGEX = "INSERT INTO regex (regex_id, regex_name, regex, new_media_id, end_media_id, swap_id)\n" +
-                                                   "VALUES (?, ?, ?, ?, ?, ?)";
+    private final static String SQL_INSERT_REGEX = "INSERT INTO regex (regex_id, regex_name, regex, new_media_id, swap_id)\n" +
+                                                   "VALUES (?, ?, ?, ?, ?)";
     private final static String SQL_INSERT_MEDIA = "INSERT INTO media (media_id, media_name, name, type, value)\n" +
                                                    "VALUES (?, ?, ?, ?, ?)";
     private final static String SQL_INSERT_SWAP = "INSERT INTO swap (swap_id, swap_name, name, type)\n" +
@@ -109,7 +109,6 @@ public final class DatasourceUtils {
                         get(row, 1),
                         get(row, 2),
                         IntegerUtil.tryParse(get(row, 3)),
-                        IntegerUtil.tryParse(get(row, 4)),
                         IntegerUtil.tryParse(get(row, 5))
                 );
                 stm.execute();

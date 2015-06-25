@@ -76,21 +76,23 @@ public class LogRecorderServiceImpl implements LogRecorderService {
 
     private void commit() {
         try {
-            if (isSealed()) {
-                // Wait 500ms
-                sync.doWait(500);
-                return;
-            }
+            while (isRunning()) {
+                if (isSealed()) {
+                    // Wait 500ms
+                    sync.doWait(500);
+                    return;
+                }
 
-            if (srQueue.isEmpty()) {
-                // If queue is empty sleep thread.
-                sync.doWait();
-            }
+                if (srQueue.isEmpty()) {
+                    // If queue is empty sleep thread.
+                    sync.doWait();
+                }
 
-            // Get from queue
-            Record r = srQueue.poll();
-            commitSessionRecord(r);
-            commitWSIRecord(r);
+                // Get from queue
+                Record r = srQueue.poll();
+                commitSessionRecord(r);
+                commitWSIRecord(r);
+            }
         } catch (InterruptedException | SQLException ex) {
             logger.warn("Failed to process new session record.",  ex);
         }
@@ -108,8 +110,8 @@ public class LogRecorderServiceImpl implements LogRecorderService {
     @Override
     public void start() {
         service = Executors.newFixedThreadPool(size);
+        setRunning(true);
         service.execute(()->commit());
-        running = true;
     }
 
     @Override
@@ -117,7 +119,7 @@ public class LogRecorderServiceImpl implements LogRecorderService {
         try {
             service.shutdown();
             service.awaitTermination(60, TimeUnit.SECONDS);
-            running = false;
+            setRunning(false);
         } catch (InterruptedException ex) {
             logger.warn("Failed to shutdown the service...");
         }
@@ -131,6 +133,10 @@ public class LogRecorderServiceImpl implements LogRecorderService {
     @Override
     public synchronized boolean isRunning() {
         return running;
+    }
+
+    private synchronized void setRunning(boolean running) {
+        this.running = running;
     }
 
     @Override

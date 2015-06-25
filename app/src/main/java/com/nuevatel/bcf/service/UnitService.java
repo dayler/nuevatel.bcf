@@ -1,7 +1,7 @@
 package com.nuevatel.bcf.service;
 
 import com.google.common.cache.LoadingCache;
-import com.nuevatel.bcf.domain.Unit;
+import com.nuevatel.bcf.core.domain.Unit;
 import com.nuevatel.common.exception.OperationException;
 
 /**

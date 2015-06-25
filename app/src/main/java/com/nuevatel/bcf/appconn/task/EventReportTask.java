@@ -47,7 +47,6 @@ public class EventReportTask implements Task {
             // eventType
             Byte eventType = message.getByte(CFIE.EVENT_TYPE_IE);
 
-            MediaDispatcher mediaDispatcher = null;
             if (id != null && eventType != null) {
                 if (eventType == CFIE.EVENT_TYPE.O_DISCONNECT_1.getType()||
                     eventType == CFIE.EVENT_TYPE.O_ABANDON_1.getType() ||
@@ -55,13 +54,16 @@ public class EventReportTask implements Task {
                     eventType == CFIE.EVENT_TYPE.T_ABANDON_1.getType() ||
                     eventType == CFIE.EVENT_TYPE.U_ABORT.getType() ||
                     eventType == CFIE.EVENT_TYPE.P_ABORT.getType()) {
-                    mediaDispatcher = mediaServiceFactory.get().invalidate(id.getId0());
+                    mediaServiceFactory.get().invalidate(id.getId0());
+                    return new EventReportRet(new Action(null, Action.SESSION_ACTION.END), null, null).toMessage();
                 }
+
+                WatchArg watchArgs = new WatchArg(WATCH_ARCG0, null, null, null, null, null);
+                return new EventReportRet(new Action(null, Action.SESSION_ACTION.ACCEPT), watchArgs, null).toMessage();
             }
 
-            // Normal response
-            WatchArg watchArgs = new WatchArg(WATCH_ARCG0, null, null, null, null, null);
-            return new EventReportRet(new Action(null, Action.SESSION_ACTION.ACCEPT), watchArgs, null).toMessage();
+            return new EventReportRet(new Action(null, Action.SESSION_ACTION.END), null, null).toMessage();
+
         } catch (Throwable ex) {
             logger.warn("Failed to build EventReportRet. appId:{} messageId:{}",conn.getRemoteId(), message.getCode(), ex);
             return new EventReportRet(new Action(null, Action.SESSION_ACTION.END), null, null).toMessage();

@@ -1,7 +1,7 @@
 package com.nuevatel.bcf.service;
 
-import com.nuevatel.bcf.domain.Unit;
-import com.nuevatel.bcf.exception.UnitNotFoundException;
+import com.nuevatel.bcf.core.domain.Unit;
+import com.nuevatel.bcf.core.exception.UnitNotFoundException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

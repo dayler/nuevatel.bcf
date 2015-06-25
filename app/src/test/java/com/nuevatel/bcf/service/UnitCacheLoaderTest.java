@@ -1,10 +1,10 @@
 package com.nuevatel.bcf.service;
 
-import com.nuevatel.bcf.domain.Unit;
-import com.nuevatel.bcf.exception.UnitNotFoundException;
+import com.nuevatel.bcf.core.dao.DatabaseHelper;
+import com.nuevatel.bcf.core.domain.Unit;
+import com.nuevatel.bcf.core.exception.UnitNotFoundException;
 import com.nuevatel.bcf.stub.DatasourceUtils;
 import com.nuevatel.common.ds.DataSourceManager;
-import com.nuevatel.common.exception.OperationException;
 import com.nuevatel.common.util.date.DateFormatter;
 import org.junit.After;
 import org.junit.Before;
@@ -84,8 +84,9 @@ public class UnitCacheLoaderTest {
     }
 
     private void shutdownDatasourceManager() throws Exception {
-        if (ds != null) {
-            ds.shutdownConnPool();
-        }
+//        if (ds != null) {
+//            ds.shutdownConnPool();
+//        }
+        DatabaseHelper.shutdownConnPool();
     }
 }

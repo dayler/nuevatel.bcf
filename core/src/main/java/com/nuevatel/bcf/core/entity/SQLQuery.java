@@ -35,6 +35,7 @@ public enum SQLQuery {
      * select name, regex_id, start_timestamp, end_timestamp from unit where name='%s';
      */
     select_unit_by_name("select name, regex_id, start_timestamp, end_timestamp from unit where name=?;"),
+
     /**
      * Query to retrieve all fields for a Regex object. <b>Must provide regexId<b/>. The table fields are mapped on
      * ERegexById.
@@ -67,40 +68,43 @@ public enum SQLQuery {
      *
      */
     select_regex_by_id("select\n" +
-            "    r.regex_id as regex_id,\n" +
-            "    r.regex_name as regex_name,\n" +
-            "    r.regex as regex_regex,\n" +
-            "    r.new_media_id as new_media_id,\n" +
-            "    nm.media_name as new_media_media_name,\n" +
-            "    nm.name as new_media_name,\n" +
-            "    nm.type as new_media_type,\n" +
-            "    nm.value as new_media_value,\n" +
-            "    r.end_media_id as end_media_id,\n" +
-            "    em.media_name as end_media_media_name,\n" +
-            "    em.name as end_media_name,\n" +
-            "    em.type as end_media_type,\n" +
-            "    em.value as end_media_value,\n" +
-            "    r.swap_id as swap_id,\n" +
-            "    if(s.type=3,concat('591', s.name), s.name) as swap_name,\n" +
-            "    s.swap_name as swap_swap_name,\n" +
-            "    s.type as swap_type\n" +
-            "from regex as r\n" +
-            "    left outer join media as nm on r.new_media_id=nm.media_id\n" +
-            "    left outer join media as em on r.end_media_id=em.media_id\n" +
-            "    left outer join swap as s on r.swap_id=s.swap_id\n" +
+            "      r.regex_id as regex_id,\n" +
+            "      r.regex_name as regex_name,\n" +
+            "      r.regex as regex_regex,\n" +
+            "      r.new_media_id as new_media_id,\n" +
+            "      nm.media_name as new_media_media_name,\n" +
+            "      nm.name as new_media_name,\n" +
+            "      nm.type as new_media_type,\n" +
+            "      nm.value as new_media_value,\n" +
+            "      r.swap_id as swap_id,\n" +
+            "      if(s.type=3,concat('591', s.name), s.name) as swap_name,\n" +
+            "      s.swap_name as swap_swap_name,\n" +
+            "      s.type as swap_type\n" +
+            "      from regex as r\n" +
+            "      left outer join media as nm on r.new_media_id=nm.media_id\n" +
+            "      left outer join swap as s on r.swap_id=s.swap_id\n" +
             "where\n" +
-            "    r.regex_id=?;"),
+            "       r.regex_id=?;"),
     
-    insert_new_unit("insert unit(name, regex_id, creation_timestamp, start_timestamp, end_timestamp)\n" +
-            "values (?, ?, ?, ?, ?);"),
-    
+    insert_new_unit("insert unit(name, regex_id, start_timestamp, end_timestamp)\n" +
+            "values (?, ?, ?, ?);"),
+    exists_unit_for_name_regex_id("select 1 from unit where name=? and regex_id=?"),
+
+
+    // TODO remove me!!
     get_unit_by_name_and_regexId(
             "select name, regex_id, creation_timestamp, start_timestamp, end_timestamp\n" +
             "\tfrom unit\n" +
             "where name=? and regex_id=?;"),
     
-    delete_unit("delete from unit\n" +
+    delete_unit_by_name_and_regex_id("delete from unit\n" +
                 "\twhere name=? and regex_id=?;"),
+    
+    insert_new_wsi_record("insert wsi_record(name, regex_id, action, from_ip_address, response)\n" +
+            "values (?, ?, ?, ?, ?);"),
+    
+    delete_wsi_record("delete from wsi_record\n" +
+                "\twhere id=?;"),
     ;
 
     private String query;

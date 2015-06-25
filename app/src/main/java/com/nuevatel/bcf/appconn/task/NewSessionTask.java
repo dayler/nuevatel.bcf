@@ -4,10 +4,10 @@ import com.nuevatel.base.appconn.Conn;
 import com.nuevatel.base.appconn.Message;
 import com.nuevatel.base.appconn.Task;
 import com.nuevatel.bcf.NameGetterProvider;
-import com.nuevatel.bcf.domain.Media;
-import com.nuevatel.bcf.domain.Regex;
-import com.nuevatel.bcf.domain.Swap;
-import com.nuevatel.bcf.domain.Unit;
+import com.nuevatel.bcf.core.domain.Media;
+import com.nuevatel.bcf.core.domain.Regex;
+import com.nuevatel.bcf.core.domain.Swap;
+import com.nuevatel.bcf.core.domain.Unit;
 import com.nuevatel.bcf.service.MediaServiceFactory;
 import com.nuevatel.bcf.service.RegexServiceFactory;
 import com.nuevatel.bcf.service.UnitServiceFactory;
@@ -58,28 +58,29 @@ public class NewSessionTask implements Task {
             if (checkNewSessionCall(newSessionCall)) {
                 // Get type
                 Type tmpType = newSessionCall.getType();
-                Name tmpName =  newSessionCall.getName();
-                // Name
-                Name name = NameGetterProvider.get().getSessionName(tmpType, tmpName);
+                Name tmpName = newSessionCall.getName();
+
                 SessionArg tmpSessionArgs = newSessionCall.getSessionArg();
                 // from session name
                 Name fromName = tmpSessionArgs.getFromName();
                 // to session name
                 Name toName = tmpSessionArgs.getToName();
                 // get session args
-                // TODO Check if is needed get new instance
                 SessionArg sessionArgs = new SessionArg(fromName,
                                                         toName,
                                                         null,
                                                         null,
                                                         null,
                                                         tmpSessionArgs.getReference());
+                // Name
+                Name name = NameGetterProvider.get().getSessionName(tmpType, tmpName);
                 if (logger.isDebugEnabled() || logger.isTraceEnabled()) {
                     logger.debug("Name:{} fromName:{} toName:{}", name, fromName, toName);
                 }
 
-                // Unit unit = unitServiceFactory.getCache().getUnit(name.getName());
+                // Get unit
                 Unit unit = unitServiceFactory.getCache().getUnit(fixUnitName(name));
+                logger.debug("##### unit is not null:{} ReqType:{}", unit != null, tmpType.getRequestType());
                 // TODO
                 if (unit != null && (Type.REQUEST_TYPE.O.compareTo(tmpType.getRequestType()) == 0)) {
                     logger.debug("Unit:{} is in the black list.", name.getName());
@@ -101,7 +102,6 @@ public class NewSessionTask implements Task {
                             if (matcher.lookingAt() && matcher.start() == 0) {
                                 // Prepare and dispatch NewSessionRet
                                 Media newMedia = regex.getNewMedia();
-                                Media endMedia = regex.getEndMedia();
                                 Swap swap = regex.getSwap();
                                 Action.MEDIA_ACTION mediaAction = null;
                                 Action.SESSION_ACTION sessionAction = null;
@@ -109,7 +109,12 @@ public class NewSessionTask implements Task {
                                 // For swap operation.
                                 if (swap != null) {
                                     logger.info("Execute Id:{} swap:{}", id.getId0(), swap.getName());
-                                    sessionArgs = new SessionArg(null, swap.getName(), null, null, null, null);
+                                    sessionArgs = new SessionArg(fromName,
+                                                                 swap.getName(),
+                                                                 null,
+                                                                 null,
+                                                                 null,
+                                                                 tmpSessionArgs.getReference());
                                     sessionAction = Action.SESSION_ACTION.MODIFY;
                                 }
 
@@ -118,21 +123,11 @@ public class NewSessionTask implements Task {
                                 // end media
                                 if (newMedia != null) {
                                     logger.info("Execute Id:{} newMedia:{}", id.getId0(), newMedia.getName());
-                                    sessionAction = ifNull(sessionAction, Action.SESSION_ACTION.ACCEPT);
+                                    sessionAction = ifNull(sessionAction, Action.SESSION_ACTION.END);
                                     mediaAction = Action.MEDIA_ACTION.NEW_MEDIA; // to initialize media op
                                     mediaArgs = new MediaArg(newMedia.getName().getName(),
                                             newMedia.getName().getType(),
                                             newMedia.getValue());
-                                }
-
-                                // if end media
-                                if (endMedia != null) {
-//                                    logger.info("Execute Id:{} endMedia:{}", id.getId0(), endMedia.getName());
-//                                    mediaAction = ifNull(mediaAction, Action.MEDIA_ACTION.END_MEDIA);
-//                                    sessionAction = ifNull(sessionAction, Action.SESSION_ACTION.END);
-//                                    mediaArgs = new MediaArg(endMedia.getName().getName(),
-//                                            endMedia.getName().getType(),
-//                                            endMedia.getValue());
                                 }
 
                                 Action tmpAction = new Action(mediaAction, sessionAction);
@@ -175,7 +170,7 @@ public class NewSessionTask implements Task {
         }
 
         logger.warn("No action can be determined for Unit:{}. The session will stop.", newSessionCall.getName().getName());
-        logger.warn("Message: {}", message.toXML());
+        logger.warn("Message:{}", message.toXML());
         return new NewSessionRet(new Action(null, Action.SESSION_ACTION.END), null, null, null).toMessage();
     }
 

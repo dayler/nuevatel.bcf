@@ -1,5 +1,7 @@
 package com.nuevatel.bcf.core.dao;
 
+import com.nuevatel.bcf.core.domain.Unit;
+
 import java.sql.SQLException;
 
 /**
@@ -28,7 +30,7 @@ public interface DAO <K, T> {
     
     /**
      * 
-     * @param key primary key, used to find the record an delete it  
+     * @param key primary key, used to find the record an deleteByPK it
      */
-    void delete(K key)throws SQLException;
+    void deleteByPK(K key)throws SQLException;
 }

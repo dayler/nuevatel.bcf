@@ -1,4 +1,4 @@
-package com.nuevatel.bcf.domain;
+package com.nuevatel.bcf.core.domain;
 
 import java.util.regex.Pattern;
 
@@ -15,21 +15,17 @@ public class Regex {
 
     private Media newMedia;
 
-    private Media endMedia;
-
     private Swap swap;
 
     public Regex(Integer id,
                  String name,
                  Pattern pattern,
                  Media newMedia,
-                 Media endMedia,
                  Swap swap) {
         this.id = id;
         this.name = name;
         this.pattern = pattern;
         this.newMedia = newMedia;
-        this.endMedia = endMedia;
         this.swap = swap;
     }
 
@@ -47,10 +43,6 @@ public class Regex {
 
     public Media getNewMedia() {
         return newMedia;
-    }
-
-    public Media getEndMedia() {
-        return endMedia;
     }
 
     public Swap getSwap() {

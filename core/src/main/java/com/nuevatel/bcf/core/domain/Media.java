@@ -1,4 +1,4 @@
-package com.nuevatel.bcf.domain;
+package com.nuevatel.bcf.core.domain;
 
 import com.nuevatel.cf.appconn.Name;
 

@@ -13,6 +13,7 @@ bin/*.jar
 nbproject/private/
 build/
 dist/
+logs/**
 
 # idea ignore #
 .idea/**

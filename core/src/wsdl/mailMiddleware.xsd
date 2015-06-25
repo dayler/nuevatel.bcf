@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.2.4-b01. --><xs:schema xmlns:tns="http://vas.nuevatel.com/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://vas.nuevatel.com/">
+
+<xs:element name="execute" type="tns:execute"></xs:element>
+
+<xs:element name="executeResponse" type="tns:executeResponse"></xs:element>
+
+<xs:element name="getVASComponentState" type="tns:getVASComponentState"></xs:element>
+
+<xs:element name="getVASComponentStateList" type="tns:getVASComponentStateList"></xs:element>
+
+<xs:element name="getVASComponentStateListResponse" type="tns:getVASComponentStateListResponse"></xs:element>
+
+<xs:element name="getVASComponentStateResponse" type="tns:getVASComponentStateResponse"></xs:element>
+
+<xs:element name="getWSAddress" type="tns:getWSAddress"></xs:element>
+
+<xs:element name="getWSAddressResponse" type="tns:getWSAddressResponse"></xs:element>
+
+<xs:element name="loadCache" type="tns:loadCache"></xs:element>
+
+<xs:element name="loadCacheResponse" type="tns:loadCacheResponse"></xs:element>
+
+<xs:element name="notifyShutdown" type="tns:notifyShutdown"></xs:element>
+
+<xs:element name="notifyShutdownResponse" type="tns:notifyShutdownResponse"></xs:element>
+
+<xs:element name="notifyStartup" type="tns:notifyStartup"></xs:element>
+
+<xs:element name="notifyStartupResponse" type="tns:notifyStartupResponse"></xs:element>
+
+<xs:element name="sendMail" type="tns:sendMail"></xs:element>
+
+<xs:element name="sendMailResponse" type="tns:sendMailResponse"></xs:element>
+
+<xs:element name="sendMailWithoutExtraFiles" type="tns:sendMailWithoutExtraFiles"></xs:element>
+
+<xs:element name="sendMailWithoutExtraFilesResponse" type="tns:sendMailWithoutExtraFilesResponse"></xs:element>
+
+<xs:element name="start" type="tns:start"></xs:element>
+
+<xs:element name="startResponse" type="tns:startResponse"></xs:element>
+
+<xs:element name="stop" type="tns:stop"></xs:element>
+
+<xs:element name="stopResponse" type="tns:stopResponse"></xs:element>
+
+<xs:complexType name="getVASComponentStateList">
+<xs:sequence>
+<xs:element name="id" type="xs:int"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getVASComponentStateListResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0" maxOccurs="unbounded"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="sendMailWithoutExtraFiles">
+<xs:sequence>
+<xs:element name="id" type="xs:int" minOccurs="0"></xs:element>
+<xs:element name="from" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="to" type="xs:string" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="subject" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="message" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="isHtml" type="xs:boolean" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="sendMailWithoutExtraFilesResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:boolean" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="notifyStartup">
+<xs:sequence>
+<xs:element name="id" type="xs:int"></xs:element>
+<xs:element name="name" type="xs:string"></xs:element>
+<xs:element name="urlSpec" type="xs:string"></xs:element>
+<xs:element name="wsNThreads" type="xs:int"></xs:element>
+<xs:element name="propagate" type="xs:boolean"></xs:element>
+<xs:element name="timestamp" type="xs:dateTime"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="notifyStartupResponse">
+<xs:sequence></xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="start">
+<xs:sequence></xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="startResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:int"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getWSAddress">
+<xs:sequence></xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getWSAddressResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="execute">
+<xs:sequence>
+<xs:element name="arg0" type="xs:int"></xs:element>
+<xs:element name="arg1" type="xs:string" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="executeResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0" maxOccurs="unbounded"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="sendMail">
+<xs:sequence>
+<xs:element name="id" type="xs:int" minOccurs="0"></xs:element>
+<xs:element name="from" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="to" type="xs:string" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="subject" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="message" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="wallpaper" type="tns:attachment" minOccurs="0"></xs:element>
+<xs:element name="attachments" type="tns:attachment" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="isHtml" type="xs:boolean" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="attachment">
+<xs:sequence>
+<xs:element name="attachment" type="xs:base64Binary" minOccurs="0"></xs:element>
+<xs:element name="filename" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="type" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="sendMailResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:boolean" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="stop">
+<xs:sequence></xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="stopResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:int"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="loadCache">
+<xs:sequence></xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="loadCacheResponse">
+<xs:sequence></xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getVASComponentState">
+<xs:sequence></xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getVASComponentStateResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:int"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="notifyShutdown">
+<xs:sequence>
+<xs:element name="id" type="xs:int"></xs:element>
+<xs:element name="name" type="xs:string"></xs:element>
+<xs:element name="propagate" type="xs:boolean"></xs:element>
+<xs:element name="timestamp" type="xs:dateTime"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="notifyShutdownResponse">
+<xs:sequence></xs:sequence>
+</xs:complexType>
+</xs:schema>

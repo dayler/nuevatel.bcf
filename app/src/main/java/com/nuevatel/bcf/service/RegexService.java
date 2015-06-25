@@ -1,7 +1,7 @@
 package com.nuevatel.bcf.service;
 
 import com.google.common.cache.LoadingCache;
-import com.nuevatel.bcf.domain.Regex;
+import com.nuevatel.bcf.core.domain.Regex;
 import com.nuevatel.common.exception.OperationException;
 
 /**

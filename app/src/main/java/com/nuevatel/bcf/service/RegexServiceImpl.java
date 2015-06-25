@@ -1,8 +1,8 @@
 package com.nuevatel.bcf.service;
 
 import com.google.common.cache.LoadingCache;
-import com.nuevatel.bcf.domain.Regex;
-import com.nuevatel.bcf.exception.RegexNotFoundException;
+import com.nuevatel.bcf.core.domain.Regex;
+import com.nuevatel.bcf.core.exception.RegexNotFoundException;
 import com.nuevatel.common.exception.OperationException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

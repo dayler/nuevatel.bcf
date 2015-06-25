@@ -1,4 +1,4 @@
-package com.nuevatel.bcf.exception;
+package com.nuevatel.bcf.core.exception;
 
 import com.nuevatel.common.exception.OperationException;
 

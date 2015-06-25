@@ -1,7 +1,7 @@
 package com.nuevatel.bcf.service;
 
 import com.google.common.cache.CacheLoader;
-import com.nuevatel.bcf.domain.Regex;
+import com.nuevatel.bcf.core.domain.Regex;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

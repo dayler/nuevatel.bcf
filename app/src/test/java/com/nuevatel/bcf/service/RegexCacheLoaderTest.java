@@ -1,8 +1,8 @@
 package com.nuevatel.bcf.service;
 
 import com.nuevatel.bcf.core.dao.DatabaseHelper;
-import com.nuevatel.bcf.domain.Regex;
-import com.nuevatel.bcf.exception.RegexNotFoundException;
+import com.nuevatel.bcf.core.domain.Regex;
+import com.nuevatel.bcf.core.exception.RegexNotFoundException;
 import com.nuevatel.bcf.stub.DatasourceUtils;
 import com.nuevatel.common.ds.DataSourceManager;
 import org.junit.After;
@@ -34,17 +34,16 @@ public class RegexCacheLoaderTest {
     public static final String TEST2_REGEX_PATTERN = "0?0?14.+|(((591)|0)?(2|3|4|6|7).+)";
 
     private static DataSourceManager ds = null;
-
     private RegexCacheLoader loader = null;
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        // No op
+//        createDatasourceManager();
     }
 
     @AfterClass
     public static void afterClass() throws Exception {
-        // No op
+        shutdownDatasourceManager();
     }
 
     @Before
@@ -58,7 +57,7 @@ public class RegexCacheLoaderTest {
     public void tearDown() throws Exception {
         DatasourceUtils.deleteTestData(ds);
         loader = null;
-        shutdownDatasourceManager();
+//        shutdownDatasourceManager();
     }
 
     @Test
@@ -94,11 +93,6 @@ public class RegexCacheLoaderTest {
         assertNull("End media id is not null", regex.getNewMedia());
         // Check swap
         assertNull("Swap id is not null", regex.getSwap());
-    }
-
-//    @Test
-    public void loadRegexpWithoutEndMedia() throws Exception {
-        fail("No Impl");
     }
 
     private static void createDatasourceManager() throws Exception {
