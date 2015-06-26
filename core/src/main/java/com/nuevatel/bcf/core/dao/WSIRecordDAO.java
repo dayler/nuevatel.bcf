@@ -38,7 +38,6 @@ public class WSIRecordDAO implements DAO<String, WSIRecord> {
                             wsiRec.getFromIpAddr(),
                             wsiRec.getResponse().value());
             stm.execute();
-
         } finally {
             if (conn != null) {
                 conn.close();

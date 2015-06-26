@@ -105,6 +105,8 @@ public enum SQLQuery {
     
     delete_wsi_record("delete from wsi_record\n" +
                 "\twhere id=?;"),
+
+    query_for_config("select param, value from config;"),
     ;
 
     private String query;

@@ -11,6 +11,7 @@ import com.nuevatel.bcf.appconn.task.TestSessionAsyncTask;
 import com.nuevatel.bcf.appconn.task.WatchReportTask;
 import com.nuevatel.bcf.core.PropName;
 import com.nuevatel.bcf.core.dao.DatabaseHelper;
+import com.nuevatel.bcf.service.AlertServiceFactory;
 import com.nuevatel.bcf.service.AppServerFactory;
 import com.nuevatel.bcf.service.LogRecorderServiceFactory;
 import com.nuevatel.bcf.service.MediaServiceFactory;
@@ -25,6 +26,7 @@ import com.nuevatel.common.exception.InvalidPropertyValueException;
 import com.nuevatel.common.util.IntegerUtil;
 import com.nuevatel.common.util.LongUtil;
 import com.nuevatel.common.util.Parameters;
+import com.nuevatel.common.util.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -62,7 +64,7 @@ public class BCFProcessor implements Processor {
     private JDBCProperties jdbcBcfProp;
 
     /**
-     * Properties to build JDBC connection pool for <b>bcf_record</b> schema.
+     * Properties to build JDBC connection\ pool for <b>bcf_record</b> schema.
      */
     private JDBCProperties jdbcRecordProp;
 
@@ -79,6 +81,8 @@ public class BCFProcessor implements Processor {
     private RegexServiceFactory regexServiceFactory = null;
 
     private MediaServiceFactory mediaServiceFactory = null;
+
+    private AlertServiceFactory alertServiceFactory = null;
 
     /**
      * The wsiPublisher.
@@ -114,7 +118,8 @@ public class BCFProcessor implements Processor {
             try {
                 start();
             } catch (Throwable ex) {
-                logger.fatal("AppServer cannot been initialized.", ex);
+                logger.fatal("BCF Application cannot been initialized.", ex);
+                System.exit(1);
             }
         });
     }
@@ -144,6 +149,9 @@ public class BCFProcessor implements Processor {
         // Initialize web service interface
         configureWSI();
         logger.info("WSI was started...");
+        // Initialize alert service factory
+        configureAlertService();
+        logger.info("AlertService was started...");
     }
 
     private TaskSet getTaskSet() {
@@ -228,14 +236,25 @@ public class BCFProcessor implements Processor {
         mediaServiceFactory.start(threadPoolSize);
     }
 
+    private void configureAlertService() throws SQLException {
+        int appId = IntegerUtil.tryParse(prop.getProperty(PropName.id.property(), "-1"));
+        alertServiceFactory = new AlertServiceFactory();
+        alertServiceFactory.start(appId);
+    }
+
     private void configureWSI() throws Exception {
         // wsiPublisherProperties
-//        wsiPublisherProperties.put(WSIPublisher.BIND_ADDRESS, "10.47.17.225");
-//        wsiPublisherProperties.put(WSIPublisher.BIND_ADDRESS, "10.40.20.148");
-        //wsiPublisherProperties.put(WSIPublisher.PORT, 8080);
-        // http://10.47.17.229:8080/wsi/unit?wsdl
-        prop.put(WSIPublisher.PORT, 8080);
-        prop.put(WSIPublisher.BACKLOG, 32);
+        String bindAddress = prop.getProperty(PropName.wsi_connection_bindAddress.property(),"");
+        int port = IntegerUtil.tryParse(prop.getProperty(PropName.wsi_connection_port.property(),"8080"));
+        int backlog = IntegerUtil.tryParse(prop.getProperty(PropName.wsi_connection_backlog.property(),"32"));
+ 
+        if (StringUtils.isNotBlank(bindAddress)) {
+            prop.put(WSIPublisher.BIND_ADDRESS, bindAddress);
+        }
+
+        prop.put(WSIPublisher.PORT, port);
+        prop.put(WSIPublisher.BACKLOG, backlog);
+
         // endpointSet
         EndpointSet endpointSet = new EndpointSet();
         endpointSet.add("unit", Endpoint.create(new Unit()), null);

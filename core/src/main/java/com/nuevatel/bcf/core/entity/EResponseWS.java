@@ -10,8 +10,8 @@ package com.nuevatel.bcf.core.entity;
  * @author clvelarde
  */
 public enum EResponseWS {
-    success(0),
-    failed(1),
+    failed(0),
+    success(1),
     ;
     private Integer value;    
 

@@ -12,11 +12,15 @@ import com.nuevatel.bcf.core.entity.EResponseWS;
 import com.nuevatel.bcf.service.LogRecorderServiceFactory;
 import com.nuevatel.common.util.StringUtils;
 import com.nuevatel.common.util.IntegerUtil;
+import com.sun.net.httpserver.HttpExchange;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import java.sql.SQLException;
 import java.util.Date;
+import javax.annotation.Resource;
+import javax.xml.ws.WebServiceContext;
+import javax.xml.ws.handler.MessageContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -32,6 +36,12 @@ public class Unit {
     private LogRecorderServiceFactory factory = new LogRecorderServiceFactory();
     
     private UnitDAO unitDAO = new UnitDAO();
+    
+    @Resource
+    private WebServiceContext wsContext;
+    
+    private static final String 
+            HTTP_EXCHANGE = "com.sun.xml.ws.http.exchange";
     
     @WebMethod
     public String lock( @WebParam (name = "name") String name,
@@ -67,7 +77,7 @@ public class Unit {
                     name,
                     regexId));
 
-            saveWSIRecord(name, intRegexId, Constants.LOCK_NAME, "10.40.40.4", EResponseWS.success);
+            saveWSIRecord(name, intRegexId, Constants.LOCK_NAME, getClientIPAddr(), EResponseWS.success);
             return "OK";
             
         } catch (SQLException ex) {
@@ -76,7 +86,7 @@ public class Unit {
                     name,
                     regexId),
                     ex);
-            saveWSIRecord(name, intRegexId, Constants.LOCK_NAME, "10.40.40.4", EResponseWS.failed);
+            saveWSIRecord(name, intRegexId, Constants.LOCK_NAME, getClientIPAddr(), EResponseWS.failed);
             return "FAILED";
         }
     }
@@ -104,7 +114,8 @@ public class Unit {
                     String.format("Successful, unit with name=%s and regexId=%s was unlocked",
                     name,
                     regexId));
-                saveWSIRecord(name, intRegexId, Constants.UNLOCK_NAME, "10.40.40.4", EResponseWS.success);
+                
+                saveWSIRecord(name, intRegexId, Constants.UNLOCK_NAME, getClientIPAddr(), EResponseWS.success);
                 return "OK";
             }
             logger.info(
@@ -119,7 +130,7 @@ public class Unit {
                             name,
                             regexId),
                     ex);
-            saveWSIRecord(name, intRegexId, Constants.UNLOCK_NAME, "10.40.40.4", EResponseWS.failed);
+            saveWSIRecord(name, intRegexId, Constants.UNLOCK_NAME, getClientIPAddr(), EResponseWS.failed);
             return "FAILED";
         }
     }
@@ -129,5 +140,13 @@ public class Unit {
                 new WSIRecord(name, regex_id, action, fromIpAddr, response);
 
         factory.get().appendRecord(wsiRec);        
+    }
+    
+    private String getClientIPAddr() {
+        MessageContext mc = wsContext.getMessageContext();
+        HttpExchange exchange = (HttpExchange) mc.get(HTTP_EXCHANGE);
+        String ip = exchange.getRemoteAddress().getAddress().getHostAddress();
+
+        return ip;
     }
 }

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="WARN" monitorInterval="300">
+<Configuration status="WARN" monitorInterval="300" packages="com.nuevatel.bcf.alert">
     <Properties>
         <Property name="appLogFileName">/bcf/tmp/bcf-app</Property>
     </Properties>
     <Appenders>
-        <RollingFile name="rollingFile" fileName="${appLogFileName}.log" filePattern="logs/$${date:yyyy-MM}/${appLogFileName}-%d{MM-dd-yyyy}-%i.log.gz">
+        <RollingFile name="rollingFile" fileName="${appLogFileName}.log" filePattern="$${date:yyyy-MM}/${appLogFileName}-%d{MM-dd-yyyy}-%i.log.gz">
             <PatternLayout>
                 <Pattern>%5p %d{ISO8601} [%t] [%c]#[%M] - %m%n</Pattern>
             </PatternLayout>
@@ -16,11 +16,19 @@
         <Console name="console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
+        <EmailAndSMSAlert name="emailAndSmsAlert">
+            <PatternLayout pattern="%-5level %d{HH:mm} %logger{36} - %msg"/>
+            <Filters>
+                <ThresholdFilter level="error" onMatch="ACCEPT"   onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="fatal" onMatch="ACCEPT"   onMismatch="DENY"/>
+            </Filters>
+        </EmailAndSMSAlert>
     </Appenders>
     <Loggers>
         <Root level="trace">
             <AppenderRef ref="console"/>
             <AppenderRef ref="rollingFile"/>
+            <AppenderRef ref="emailAndSmsAlert"/>
         </Root>
     </Loggers>
 </Configuration>

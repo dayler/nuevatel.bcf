@@ -16,7 +16,6 @@ import org.apache.logging.log4j.Logger;
 import java.util.concurrent.ScheduledFuture;
 
 /**
- * TODO Make unit test
  *
  * Responsible to dispatch single media request.
  *
@@ -77,8 +76,8 @@ public class MediaDispatcher implements Runnable {
         SetSessionRet setSessionRet = null;
         try {
             setSessionRet = new SetSessionRet(appServerFactory.get().dispatch(nodeId, sessionCall.toMessage()));
-            logger.debug("dispatch SetSessionRet nodeId:{} id0:{} id1:{} type:{} Action:{} SessionArgs{}",
-                         nodeId, id.getId0(), id.getId1(), type, toStringAction(tmpAction), toStringSessionArgs(args));
+            logger.debug("dispatch SetSessionRet nodeId:{} id0:{} id1:{} {} {} {}",
+                         nodeId, id.getId0(), id.getId1(), toStringType(type), toStringAction(tmpAction), toStringSessionArgs(args));
         } catch (Exception ex) {
             logger.warn("Failed to dispatch Media Message through appconnServer. remoteId:{} id:{} type:{} action:{} args:{}",
                         nodeId, id, type, this.action, args, ex);
@@ -91,8 +90,6 @@ public class MediaDispatcher implements Runnable {
             EventReportCall eventReportCall = new EventReportCall(id, type, CFIE.EVENT_TYPE.SET_SESSION_FAILED.getType(), null);
             try {
                 appServerFactory.get().dispatch(nodeId, eventReportCall.toMessage());
-                // TODO Ask about that
-                // GatewayApp.getGatewayApp().getProxyApp(toAppId).getAppClient().dispatch(eventReportCall.toMessage());
             } catch (Exception ex) {
                 logger.warn("Failed to dispatch Media Message through appconnServer. remoteId:{} id:{} type:{} action:{} args:{}",
                             nodeId, id, type, this.action, args, ex);
@@ -102,6 +99,10 @@ public class MediaDispatcher implements Runnable {
 
     private String toStringAction(Action action) {
         return String.format("Action[MEDIA_ACTION:%s SESSION_ACTION:%s]", action.getMediaAction(), action.getSessionAction());
+    }
+
+    private String toStringType(Type type) {
+        return String.format("Type[SERVICE_TYPE:%S REQUEST_TYPE:%S]", type.getServiceType(), type.getRequestType());
     }
 
     private String toStringSessionArgs(SessionArg args) {

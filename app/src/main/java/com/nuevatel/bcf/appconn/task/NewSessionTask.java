@@ -80,7 +80,7 @@ public class NewSessionTask implements Task {
 
                 // Get unit
                 Unit unit = unitServiceFactory.getCache().getUnit(fixUnitName(name));
-                logger.debug("##### unit is not null:{} ReqType:{}", unit != null, tmpType.getRequestType());
+                logger.debug("unit is not null:{} ReqType:{}", unit != null, tmpType.getRequestType());
                 // TODO
                 if (unit != null && (Type.REQUEST_TYPE.O.compareTo(tmpType.getRequestType()) == 0)) {
                     logger.debug("Unit:{} is in the black list.", name.getName());
@@ -123,7 +123,7 @@ public class NewSessionTask implements Task {
                                 // end media
                                 if (newMedia != null) {
                                     logger.info("Execute Id:{} newMedia:{}", id.getId0(), newMedia.getName());
-                                    sessionAction = ifNull(sessionAction, Action.SESSION_ACTION.END);
+                                    sessionAction = ifNull(sessionAction, Action.SESSION_ACTION.ACCEPT);
                                     mediaAction = Action.MEDIA_ACTION.NEW_MEDIA; // to initialize media op
                                     mediaArgs = new MediaArg(newMedia.getName().getName(),
                                             newMedia.getName().getType(),

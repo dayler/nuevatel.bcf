@@ -44,6 +44,20 @@ public enum PropName {
      * Property appconn.sources
      */
     appconn_sources("appconn.sources"),
+    
+    /**
+     * Property wsi.connection.bindAddress
+     */
+    wsi_connection_bindAddress("wsi.connection.bindAddress"),
+    /**
+     * Property wsi.connection.port
+     */
+    wsi_connection_port("wsi.connection.port"),
+    
+    /**
+     * Property wsi.connection.backlog
+     */
+    wsi_connection_backlog("wsi.connection.backlog"),
     ;
 
     private String propName;
