@@ -78,9 +78,37 @@
                 </execution>
               </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>make-assembly-zip</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>../assembly.xml</descriptor>
+                            </descriptors>
+                            <finalName>bcf-${project.version}</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <archive>
+                                <manifest>
+                                    <addClasspath>true</addClasspath>
+                                    <mainClass>com.nuevatel.bcf.BCF</mainClass>
+                                </manifest>
+                            </archive>
+                            <outputDirectory>../build</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
-
     <repositories>
         <repository>
             <id>Module repository</id>
