@@ -82,7 +82,7 @@ public class AlertServiceImpl implements AlertService {
         try {
             return configDao.getConfig();
         } catch (SQLException ex) {
-            logger.error("Failed to load initial configuration.", ex);
+            logger.error("Failed to load configuration from config table.", ex);
             return null;
         }
     }
@@ -95,12 +95,11 @@ public class AlertServiceImpl implements AlertService {
         config = getConfig();
         String header = String.format(config.getAlertHeader(), messages.size());
         StringBuffer emailBody = new StringBuffer();
-        String smsBody =  messages.peek();
         while (!messages.isEmpty()) {
             emailBody.append(messages.poll()).append(ENDL);
         }
         dispatchEmail(header, emailBody.toString());
-        dispatchSMS(header, smsBody);
+        dispatchSMS(header);
     }
 
     private void dispatchEmail(String header, String body) {
@@ -112,13 +111,12 @@ public class AlertServiceImpl implements AlertService {
                 fullMsg, null, null, false);
     }
 
-    private void dispatchSMS(String header, String body) {
-        String fullMsg = header + ENDL + body;
+    private void dispatchSMS(String msg) {
         config.getToSmsList().forEach((to) -> {
             List<String> arg2 = new ArrayList<>();
             arg2.add(config.getFromSms());
             arg2.add(to);
-            arg2.add(fullMsg);
+            arg2.add(msg);
             vasws.execute(appId, arg2);
         });
     }

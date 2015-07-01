@@ -31,7 +31,7 @@ public class WSIRecordDAO implements DAO<String, WSIRecord> {
 
         try {
             conn = ds.getConnection();
-            stm = ds.makeStatement(conn, SQLQuery.insert_new_wsi_record.query(),
+            stm = ds.makeStatement(conn, SQLQuery.insert_new_wsi_record_0.query(),
                             wsiRec.getName(),
                             wsiRec.getRegex_id(),
                             wsiRec.getAction(),
@@ -76,7 +76,7 @@ public class WSIRecordDAO implements DAO<String, WSIRecord> {
 
         try {
             conn = ds.getConnection();
-            stm = ds.makeStatement(conn, SQLQuery.delete_wsi_record.query(), key);
+            stm = ds.makeStatement(conn, SQLQuery.delete_wsi_record_0.query(), key);
             stm.execute();
         } finally {
             if (conn != null) {

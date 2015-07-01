@@ -74,7 +74,7 @@ public class BCF {
                 // Load default properties
                 is = BCF.class.getResourceAsStream("/jdbc.bcf_record.properties");
             } else {
-                String propPath = args[1];
+                String propPath = args[2];
                 is = new FileInputStream(propPath);
             }
 

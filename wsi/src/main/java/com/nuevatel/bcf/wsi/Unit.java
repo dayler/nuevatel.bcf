@@ -10,6 +10,7 @@ import com.nuevatel.bcf.core.dao.UnitDAO;
 import com.nuevatel.bcf.core.domain.WSIRecord;
 import com.nuevatel.bcf.core.entity.EResponseWS;
 import com.nuevatel.bcf.service.LogRecorderServiceFactory;
+import com.nuevatel.bcf.service.UnitServiceFactory;
 import com.nuevatel.common.util.StringUtils;
 import com.nuevatel.common.util.IntegerUtil;
 import com.sun.net.httpserver.HttpExchange;
@@ -36,6 +37,8 @@ public class Unit {
     private LogRecorderServiceFactory factory = new LogRecorderServiceFactory();
     
     private UnitDAO unitDAO = new UnitDAO();
+
+    private UnitServiceFactory unitServiceFactory = new UnitServiceFactory();
     
     @Resource
     private WebServiceContext wsContext;
@@ -60,24 +63,24 @@ public class Unit {
         }
         
         try {
-            if(unitDAO.existsUnitForNameAndRegexId(name, intRegexId)){
-                logger.info(
-                        String.format("This unit with name=%s and regexId=%s is already locked",
-                                name,
-                                regexId));
+            if(unitDAO.existsUnitForNameAndRegexId(name, intRegexId)) {
+                logger.info(String.format("This unit with name=%s and regexId=%s is already locked",
+                            name,
+                            regexId));
                 return "NOT_NULL_UNITNAME";
             }
-            
+
             com.nuevatel.bcf.core.domain.Unit unit = new com.nuevatel.bcf.core.domain.Unit(name);
             unit.addRegexId(intRegexId);
             unit.addTimespan(intRegexId, new Date(), null);
             unitDAO.insert(unit);
             logger.info(
                     String.format("Successful, unit with name=%s and regexId=%s was locked",
-                    name,
-                    regexId));
+                            name,
+                            regexId));
 
             saveWSIRecord(name, intRegexId, Constants.LOCK_NAME, getClientIPAddr(), EResponseWS.success);
+            unitServiceFactory.getCache().refresh(name);
             return "OK";
             
         } catch (SQLException ex) {
@@ -116,6 +119,7 @@ public class Unit {
                     regexId));
                 
                 saveWSIRecord(name, intRegexId, Constants.UNLOCK_NAME, getClientIPAddr(), EResponseWS.success);
+                unitServiceFactory.getCache().refresh(name);
                 return "OK";
             }
             logger.info(

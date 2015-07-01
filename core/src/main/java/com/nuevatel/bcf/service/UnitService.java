@@ -40,4 +40,11 @@ public interface UnitService {
      * @param cache LoadingCache to use.
      */
     void setCacheEngine(LoadingCache<String, Unit> cache);
+
+    /**
+     * Reload an unit in the cache.
+     *
+     * @param name Unit to reload.
+     */
+    void refresh(String name);
 }

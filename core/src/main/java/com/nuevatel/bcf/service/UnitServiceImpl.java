@@ -59,4 +59,9 @@ class UnitServiceImpl implements UnitService {
     public void setCacheEngine(LoadingCache<String, Unit> cache) {
         this.cache = cache;
     }
+
+    @Override
+    public void refresh(String name) {
+        cache.refresh(name);
+    }
 }
