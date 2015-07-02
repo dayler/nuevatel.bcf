@@ -1,0 +1,8 @@
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>cf.proxy</groupId>
+    <artifactId>wsi</artifactId>
+    <name>CF Proxy WSI</name>
+    <version>2.2</version>
+    <description>CF Proxy WSI</description>
+</project>

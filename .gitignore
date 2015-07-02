@@ -4,7 +4,8 @@
 # Package Files #
 build/*.jar
 bin/*.jar
-*/target/**
+**/target/**
+**/.idea/**
 *.war
 *.ear
 *.log
@@ -14,6 +15,7 @@ nbproject/private/
 build/
 dist/
 logs/**
+target/**
 
 # idea ignore #
 .idea/**

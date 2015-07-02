@@ -4,12 +4,12 @@
         <Property name="appLogFileName">/bcf/tmp/bcf-app</Property>
     </Properties>
     <Appenders>
-        <RollingFile name="rollingFile" fileName="${appLogFileName}.log" filePattern="$${date:yyyy-MM}/${appLogFileName}-%d{MM-dd-yyyy}-%i.log.gz">
+        <RollingFile name="rollingFile" fileName="${appLogFileName}.log" filePattern="${appLogFileName}-%d{MM-dd-yyyy}-%i.log.gz">
             <PatternLayout>
                 <Pattern>%5p %d{ISO8601} [%t] [%c]#[%M] - %m%n</Pattern>
             </PatternLayout>
             <Policies>
-                <!-- <SizeBasedTriggeringPolicy size="10 MB"/> -->
+                <SizeBasedTriggeringPolicy size="100 MB"/>
                 <TimeBasedTriggeringPolicy interval="6" modulate="true"/>
             </Policies>
         </RollingFile>

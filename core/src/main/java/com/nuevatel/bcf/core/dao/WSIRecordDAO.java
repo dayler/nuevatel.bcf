@@ -3,9 +3,13 @@ package com.nuevatel.bcf.core.dao;
 import com.nuevatel.bcf.core.domain.WSIRecord;
 import com.nuevatel.bcf.core.entity.SQLQuery;
 import com.nuevatel.common.ds.DataSourceManager;
+
+import java.security.NoSuchAlgorithmException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
+
+import com.nuevatel.common.util.UniqueID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -13,11 +17,23 @@ import org.apache.logging.log4j.Logger;
  * Created by asalazar on 6/23/15.
  */
 public class WSIRecordDAO implements DAO<String, WSIRecord> {
-    
+
+    public static final int UNIQUEID_LENGTH = 16;
+
     private static Logger logger = LogManager.getLogger(WSIRecordDAO.class);
     
     private DataSourceManager ds = DatabaseHelper.getRecordDatasource();
-    
+
+    private UniqueID idGenerator = null;
+
+    public WSIRecordDAO() {
+        try {
+            idGenerator = new UniqueID();
+        } catch (NoSuchAlgorithmException ex) {
+            logger.error("Failed to initialize idGenerator.", ex);
+        }
+    }
+
     @Override
     public void insert(WSIRecord wsiRec) throws SQLException {
         logger.info("insert");
@@ -32,6 +48,7 @@ public class WSIRecordDAO implements DAO<String, WSIRecord> {
         try {
             conn = ds.getConnection();
             stm = ds.makeStatement(conn, SQLQuery.insert_new_wsi_record_0.query(),
+                            UniqueID.hexEncode(idGenerator.next(UNIQUEID_LENGTH)),
                             wsiRec.getName(),
                             wsiRec.getRegex_id(),
                             wsiRec.getAction(),
@@ -65,27 +82,6 @@ public class WSIRecordDAO implements DAO<String, WSIRecord> {
     @Override
     public void deleteByPK(String key) throws SQLException {
         logger.info("delete");
-
-        if (key == null) {
-            logger.info("Not find wsi record because key is null");
-            return;
-        }
-
-        Connection conn = null;
-        CallableStatement stm = null;
-
-        try {
-            conn = ds.getConnection();
-            stm = ds.makeStatement(conn, SQLQuery.delete_wsi_record_0.query(), key);
-            stm.execute();
-        } finally {
-            if (conn != null) {
-                conn.close();
-            }
-
-            if (stm != null) {
-                stm.close();
-            }
-        }
+        logger.info("Not supported");
     }
 }

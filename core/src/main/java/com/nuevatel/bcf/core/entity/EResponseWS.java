@@ -10,8 +10,13 @@ package com.nuevatel.bcf.core.entity;
  * @author clvelarde
  */
 public enum EResponseWS {
-    failed(0),
-    success(1),
+    SUCCESSFUL(0),
+    INVALID_PARAMETERS(-1),
+    INVALID_NAME(-2),
+    INVALID_REGEX_ID(-3),
+    FAILED_INSERT_UNIT(-4),
+    NULL_UNITNAME(-5),
+    NOT_NULL_UNITNAME(-6),
     ;
     private Integer value;    
 

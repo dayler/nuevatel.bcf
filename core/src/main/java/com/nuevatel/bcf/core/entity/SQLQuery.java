@@ -100,8 +100,8 @@ public enum SQLQuery {
     delete_unit_by_name_and_regex_id("delete from unit\n" +
                 "\twhere name=? and regex_id=?;"),
     
-    insert_new_wsi_record_0("insert wsi_record_0(name, regex_id, action, from_ip_address, response)\n" +
-            "values (?, ?, ?, ?, ?);"),
+    insert_new_wsi_record_0("insert wsi_record_0(id, name, regex_id, action, from_ip_address, response)\n" +
+            "values (?, ?, ?, ?, ?, ?);"),
     
     delete_wsi_record_0("delete from wsi_record_0\n" +
                 "\twhere id=?;"),

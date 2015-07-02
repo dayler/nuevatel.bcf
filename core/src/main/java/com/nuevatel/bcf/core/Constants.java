@@ -17,4 +17,6 @@ public final class Constants {
     public final static String LOCK_NAME = "lock";
     
     public final static String UNLOCK_NAME = "unlock";
+
+    public final static Integer NAME_LENGTH = 8;
 }
